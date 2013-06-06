@@ -1,0 +1,8 @@
+syntax: glob
+*.pyc
+.project
+.pydevproject
+CVS
+
+syntax: regexp
+doc/sphinx/build
