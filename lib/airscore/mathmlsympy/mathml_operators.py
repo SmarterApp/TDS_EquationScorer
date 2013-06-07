@@ -10,6 +10,7 @@
 from parser import mathml_element, Q_MO
 from base_mathml_element import BaseMathmlElement
 from partial_sympy_object import PartialSympyObject, SYMPY_NONE
+import mathml_number
 
 @mathml_element('mo')
 class MathmlMO( BaseMathmlElement ):
@@ -31,6 +32,8 @@ class MathmlMO( BaseMathmlElement ):
         """
         if self.decoded_text in Inequality.texts:
             self.__class__ = Inequality
+        elif self.decoded_text == '.':
+            self.__class__ = mathml_number.MathmlMN
 
 
 class Inequality( BaseMathmlElement ):

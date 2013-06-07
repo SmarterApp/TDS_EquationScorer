@@ -50,6 +50,20 @@ class TestParser( abstract_parser_test.TestCase ):
         sympy = node_l.to_sympy( sympy )
         self.assertEquals( sympy.get_sympy_text(), '123456', "Got the wrong content from the sympy linked list" )
         
+    def test_number_3(self):
+        '''Dots are parts of numbers, even if listed as operators
+        '''
+        node = et.fromstring( abstract_parser_test.XML_2, self.parser )
+        txt = node.get_sympy_text()
+        self.assertEquals( txt, '(5.0)', "Got the wrong content from the sympy linked list: " + txt )
+
+    def test_number_4(self):
+        '''Dots are numbers
+        '''
+        node = et.fromstring( '<mo xmlns="http://www.w3.org/1998/Math/MathML">.</mo>', self.parser )
+        self.assertIsInstance( node, MathmlMN, "Didn't get correct type for <mo>.</mo> element: " )
+        
+        
     def test_identifier_1(self):
         '''Basic construction and properties of an identifier
         '''
@@ -126,6 +140,16 @@ class TestParser( abstract_parser_test.TestCase ):
         self.assertIsInstance( node, MathmlMath, "Didn't get correct type for <math> element: " )
         sympy = node.to_sympy()
         self.assertEquals( sympy.get_sympy_text(), "Le(1*x,3)" )
+         
+    def test_row_2(self):
+        """What do we do with an expression with no equality or inequality operators?
+        """
+        xml = self.mathml_wrap( u'<mn>7</mn><mi>x</mi>' )
+        node = et.fromstring( xml, self.parser )
+        self.assertIsInstance( node, MathmlMath, "Didn't get correct type for <math> element: " )
+        archetype = "7*x"
+        txt = node.get_sympy_text()
+        self.assertEquals( txt, archetype, "Saw {}, expected {}".format( txt, archetype ) )
          
     def test_process_mathml_data_1(self):
         """Test the process_mathml_data wrapper function

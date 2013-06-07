@@ -33,6 +33,8 @@ class BaseMathmlContainer( BaseMathmlElement ):
         
         # Add a string for each equality or inequality expression
         ret = []
+        if len( inequalities ) == 0:
+            ret.append( expressions[0].get_sympy_text() )
         for i in range( len( inequalities ) ):
             ret.append( '{}({},{})'.format( inequalities[i].get_sympy_text(),
                     expressions[i+1].get_sympy_text(),
