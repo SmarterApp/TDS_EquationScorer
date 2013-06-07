@@ -288,3 +288,12 @@ class TestParser( abstract_parser_test.TestCase ):
         txt = node.get_sympy_text()
         self.assertEquals( txt, archetype, "Saw {}, expected {}".format( txt, archetype ) )
 
+    def test_fenced(self):
+        """Configurable parentheses
+        """
+        xml = self.mathml_wrap( u'<mfenced open="!@(" close=")@!"><mi>zoggart!</mi></mfenced>' )
+        node = et.fromstring( xml, self.parser )
+        archetype = "!@(zoggart!)@!"
+        txt = node.get_sympy_text()
+        self.assertEquals( txt, archetype, "Saw {}, expected {}".format( txt, archetype ) )
+

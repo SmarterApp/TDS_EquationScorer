@@ -70,3 +70,10 @@ class MathmlMRow( BaseMathmlContainer ):
     @property
     def is_non_neg_integer(self):
         return all( [ child.is_non_neg_integer for child in self ])
+    
+@mathml_element( 'mfenced' )
+class MathmlMFenced( BaseMathmlContainer ):
+    def get_sympy_text( self ):
+        return self.attrib['open'] \
+            + super( MathmlMFenced, self ).get_sympy_text() \
+            + self.attrib['close']
