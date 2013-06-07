@@ -297,3 +297,12 @@ class TestParser( abstract_parser_test.TestCase ):
         txt = node.get_sympy_text()
         self.assertEquals( txt, archetype, "Saw {}, expected {}".format( txt, archetype ) )
 
+    def test_sqrt(self):
+        """Configurable parentheses
+        """
+        xml = self.mathml_wrap( u'<msqrt><mi>zoggart!</mi></msqrt>' )
+        node = et.fromstring( xml, self.parser )
+        archetype = "sqrt(zoggart!)"
+        txt = node.get_sympy_text()
+        self.assertEquals( txt, archetype, "Saw {}, expected {}".format( txt, archetype ) )
+

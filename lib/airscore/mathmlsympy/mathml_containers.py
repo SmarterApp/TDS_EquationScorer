@@ -77,3 +77,9 @@ class MathmlMFenced( BaseMathmlContainer ):
         return self.attrib['open'] \
             + super( MathmlMFenced, self ).get_sympy_text() \
             + self.attrib['close']
+
+@mathml_element( 'msqrt' )
+class MathmlMSqrt( BaseMathmlContainer ):
+    def get_sympy_text( self ):
+        return 'sqrt(' + super( MathmlMSqrt, self ).get_sympy_text() + ')'
+
