@@ -19,6 +19,7 @@ class BaseMathmlElement( et.Element ):
     is_implicit_multiplicand = True
     is_inequality = False
     is_number = False
+    is_non_neg_integer = False
     
     def to_sympy( self, tail=SYMPY_NONE ):
         """Return oneself as a "partial sympy object"

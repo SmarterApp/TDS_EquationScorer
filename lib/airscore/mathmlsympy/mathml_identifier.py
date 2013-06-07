@@ -9,7 +9,17 @@
 
 from parser import mathml_element
 from base_mathml_element import BaseMathmlElement
+from partial_sympy_object import PartialSympyObject, SYMPY_NONE
+
+FUNCTION_NAMES = set( ( "sin", "cos", "tan", "asin", "acos", "atan", "log", "ln", "exp", "f", "g" ) )
 
 @mathml_element( 'mi' )
 class MathmlMI( BaseMathmlElement ):
-    pass
+    def pick_subclass( self ):
+        if self.decoded_text in FUNCTION_NAMES:
+            self.__class__ = Function
+
+class Function( MathmlMI ):
+    def to_sympy( self, tail=SYMPY_NONE ):
+        return PartialSympyObject( self, tail )
+

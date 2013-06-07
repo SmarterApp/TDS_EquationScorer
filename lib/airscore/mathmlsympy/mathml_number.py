@@ -16,6 +16,10 @@ import mathml_operators
 class MathmlMN( BaseMathmlElement ):
     is_number = True
     
+    @property
+    def is_non_neg_integer(self):
+        return self.decoded_text.isdigit()
+    
     def to_sympy( self, tail=SYMPY_NONE ):
         if tail.is_number:
             tail.text = self.get_sympy_text() + tail.text

@@ -7,11 +7,15 @@
 # https://bitbucket.org/sbacoss/eotds/wiki/AIR_Open_Source_License
 ###############################################################################
 
-from parser import process_mathml_data
+from base_mathml_element import BaseMathmlElement
+from parser import mathml_element
 
-# Force the imports to happen so that the classes are appropriately registered
-import mathml_containers
-import mathml_identifier
-import mathml_number
-import mathml_operators
-import mathml_fraction
+@mathml_element( 'mfrac' )
+class MathmlMFrac( BaseMathmlElement ):
+    
+    def get_sympy_text( self ):
+        return '/'.join( [ child.get_sympy_text() for child in self ] )
+
+    @property
+    def is_implicit_addend( self ):
+        return self[0].is_non_neg_integer and self[1].is_non_neg_integer

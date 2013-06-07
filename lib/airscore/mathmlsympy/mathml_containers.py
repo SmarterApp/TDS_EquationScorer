@@ -21,6 +21,8 @@ class BaseMathmlContainer( BaseMathmlElement ):
         expressions = [SYMPY_NONE]
         i = 0
         for child in self[::-1]:
+            if not isinstance( child, BaseMathmlElement ):
+                raise ValueError( "I do not know how to handle the tag {}".format( child.tag ) )
             if child.is_inequality:
                 inequalities.append( child )
                 expressions[i] = tail
@@ -62,4 +64,9 @@ class MathmlMStyle( BaseMathmlContainer ):
 
 @mathml_element( 'mrow' )
 class MathmlMRow( BaseMathmlContainer ):
-    pass
+    def get_sympy_text( self ):
+        return '(' + super( MathmlMRow, self ).get_sympy_text() + ')'
+
+    @property
+    def is_non_neg_integer(self):
+        return all( [ child.is_non_neg_integer for child in self ])

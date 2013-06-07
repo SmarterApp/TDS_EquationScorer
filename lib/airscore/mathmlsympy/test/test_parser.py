@@ -10,7 +10,7 @@
 from xml.etree import ElementTree as et
 
 from airscore.mathmlsympy.parser import process_mathml_data, MATHML_NAMESPACE
-from airscore.mathmlsympy.mathml_containers import MathmlMath, MathmlMStyle
+from airscore.mathmlsympy.mathml_containers import MathmlMath, MathmlMStyle, MathmlMRow
 from airscore.mathmlsympy.mathml_number import MathmlMN
 from airscore.mathmlsympy.mathml_identifier import MathmlMI
 from airscore.mathmlsympy.mathml_operators import MathmlMO, Inequality
@@ -63,6 +63,72 @@ class TestParser( abstract_parser_test.TestCase ):
         node = et.fromstring( '<mo xmlns="http://www.w3.org/1998/Math/MathML">.</mo>', self.parser )
         self.assertIsInstance( node, MathmlMN, "Didn't get correct type for <mo>.</mo> element: " )
         
+    def test_number_5(self):
+        '''Simple integer
+        '''
+        xml = self.mathml_wrap('<mn>123</mn>')
+        tree = et.fromstring( xml, self.parser )
+        node = tree[0][0]
+        self.assertIsInstance( node, MathmlMN, "Didn't get correct type for <mn> element: " )
+        self.assertTrue( node.is_non_neg_integer )
+        
+    def test_number_6(self):
+        '''Simple number not an integer
+        '''
+        xml = self.mathml_wrap('<mn>123.4</mn>')
+        tree = et.fromstring( xml, self.parser )
+        node = tree[0][0]
+        self.assertIsInstance( node, MathmlMN, "Didn't get correct type for <mn> element: " )
+        self.assertFalse( node.is_non_neg_integer )
+        
+        
+    def test_number_7(self):
+        '''Negatibve number not an integer
+        '''
+        xml = self.mathml_wrap('<mn>-123</mn>')
+        tree = et.fromstring( xml, self.parser )
+        node = tree[0][0]
+        self.assertIsInstance( node, MathmlMN, "Didn't get correct type for <mn> element: " )
+        self.assertFalse( node.is_non_neg_integer )
+        
+        
+    def test_number_8(self):
+        '''Compound integer
+        '''
+        xml = self.mathml_wrap('<mrow><mn>123</mn><mn>456</mn></mrow>')
+        tree = et.fromstring( xml, self.parser )
+        node = tree[0][0]
+        self.assertIsInstance( node, MathmlMRow, "Didn't get correct type for <mn> element: " )
+        self.assertTrue( node.is_non_neg_integer )
+        
+        
+    def test_number_9(self):
+        '''Compound number not an integer
+        '''
+        xml = self.mathml_wrap('<mrow><mn>123</mn><mo>+</mo><mn>456</mn></mrow>')
+        tree = et.fromstring( xml, self.parser )
+        node = tree[0][0]
+        self.assertIsInstance( node, MathmlMRow, "Didn't get correct type for <mn> element: " )
+        self.assertFalse( node.is_non_neg_integer )
+        
+    def test_number_10(self):
+        '''Implicit addition for mixed fractions
+        '''
+        xml = self.mathml_wrap('<mn>1</mn><mfrac><mrow><mn>123</mn></mrow><mrow><mn>456</mn></mrow></mfrac>')
+        node = et.fromstring( xml, self.parser )
+        txt = node.get_sympy_text()
+        archetype = "1+(123)/(456)"
+        self.assertEquals( txt, archetype, 'Found {!r}, expected {!r}'.format( txt, archetype ) )
+        
+    def test_number_11(self):
+        '''Revert to multiplication if fraction is not a simple ratio of non-negative integers
+        '''
+        xml = self.mathml_wrap('<mn>1</mn><mfrac><mrow><mn>1</mn></mrow><mrow><mi>x</mi></mrow></mfrac>')
+        node = et.fromstring( xml, self.parser )
+        txt = node.get_sympy_text()
+        archetype = "1*(1)/(x)"
+        self.assertEquals( txt, archetype, 'Found {!r}, expected {!r}'.format( txt, archetype ) )
+        
         
     def test_identifier_1(self):
         '''Basic construction and properties of an identifier
@@ -85,6 +151,15 @@ class TestParser( abstract_parser_test.TestCase ):
         sympy = node_r.to_sympy()
         sympy = node_l.to_sympy( sympy )
         self.assertEquals( sympy.get_sympy_text(), 'y*x', "Got the wrong content from the sympy linked list" )
+        
+    def test_identifier_3(self):
+        '''Suppress implicit multiplication between a function and an identifier
+        '''
+        xml = self.mathml_wrap('<mn>3</mn><mi>cos</mi><mo>(</mo><mi>y</mi><mo>)</mo>')
+        node = et.fromstring( xml, self.parser )
+        txt = node.get_sympy_text()
+        archetype = "3*cos(y)"
+        self.assertEquals( txt, archetype, 'Found {!r}, expected {!r}'.format( txt, archetype ) )
         
     def test_number_identifier_1(self):
         '''Test implicit multiplication of an identifier by a number
@@ -204,3 +279,12 @@ class TestParser( abstract_parser_test.TestCase ):
                 txt = sympy.get_sympy_text()
                 self.assertEquals( txt, to, u"sympy.get_sympy_text() returned {!r} instead of {!r}".format( txt, to ) )
                 
+    def test_frac_1(self):
+        """A simple (albeit infinite) fraction?
+        """
+        xml = self.mathml_wrap( u'<mfrac><mrow><mn>1</mn></mrow><mrow><mn>0</mn></mrow></mfrac>' )
+        node = et.fromstring( xml, self.parser )
+        archetype = "(1)/(0)"
+        txt = node.get_sympy_text()
+        self.assertEquals( txt, archetype, "Saw {}, expected {}".format( txt, archetype ) )
+
