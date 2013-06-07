@@ -30,21 +30,64 @@ class MathmlMO( BaseMathmlElement ):
         class after it was created. We do this because we didn't know which subclass to use
         until the text of the element was filled in.
         """
-        if self.decoded_text in Inequality.texts:
-            self.__class__ = Inequality
-        elif self.decoded_text == '.':
-            self.__class__ = mathml_number.MathmlMN
+        txt = self.decoded_text
+        for cls in ( Inequality, Pipe, GroupClose, GroupOpen, DecimalPoint ):
+            if txt in cls.symbols:
+                self.__class__ = cls
+                break
 
 
-class Inequality( BaseMathmlElement ):
-    texts = { '<':'Lt', '&lt;':'Lt', u'\u2664':'Le', '=':'Eq', '\u2665':'Ge', '&gt;':'Gt', '>':'Gt'  }
-
+class Inequality( MathmlMO ):
+    
+    symbols = { '<':'Lt', '&lt;':'Lt', u'\u2664':'Le', '=':'Eq', '\u2665':'Ge', '&gt;':'Gt', '>':'Gt'  }
     is_inequality = True
-    is_implicit_multiplicand = False
     
     def get_sympy_text(self):
-        return self.texts[ self.decoded_text ]
+        return self.symbols[ self.decoded_text ]
+
+class GroupClose( MathmlMO ):
     
+    symbols = (')',)
+    
+    def to_sympy( self, tail=SYMPY_NONE ):
+        # Revert to the "expression" logic that is on the BaseMathmlExpression class
+        # This is the behavior that tries to do implicit multiplication by whatever follows
+        return super( MathmlMO, self ).to_sympy( tail )
+    
+class GroupOpen( MathmlMO ):
+    
+    symbols = ('(',)
+    is_implicit_multiplicand = True
+    
+class Pipe( MathmlMO ):
+    
+    symbols = ('|',)
+    
+    @property
+    def is_implicit_multiplicand(self):
+        return self.is_opening
+
+    def get_sympy_text( self ):
+        if self.is_opening:
+            return 'Abs('
+        else:
+            return ')'
+    
+    def to_sympy( self, tail=SYMPY_NONE ):
+        self.is_opening = tail.is_closed
+        if self.is_opening:
+            tail = super( Pipe, self ).to_sympy( tail )
+            tail.is_closed = False
+        else:
+            tail = super( MathmlMO, self ).to_sympy( tail )
+            tail.is_closed = True
+        return tail
+    
+# The DecimalPoint class inherits from a mathml number even though it is represented by
+# a mathml operator in the XML. 
+class DecimalPoint( mathml_number.MathmlMN ):
+    
+    symbols = '.'
 
 PLUS_OPERATOR = MathmlMO()
 PLUS_OPERATOR.text="+"

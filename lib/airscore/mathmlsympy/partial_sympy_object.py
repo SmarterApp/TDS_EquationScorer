@@ -24,7 +24,7 @@ class PartialSympyObject( object ):
     '''
     def __init__( self, el, tail ):
         self.next = tail
-        self.closed = tail.closed if tail is not None else False
+        self.is_closed = tail.is_closed if tail is not None else False
         
         self.is_implicit_multiplicand = el.is_implicit_multiplicand if el is not None else False
         self.is_implicit_addend = el.is_implicit_addend if el is not None else False

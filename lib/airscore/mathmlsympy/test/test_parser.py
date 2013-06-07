@@ -133,6 +133,33 @@ class TestParser( abstract_parser_test.TestCase ):
         self.assertFalse( node.is_implicit_addend, "Operator says it can be implicitly added" )
         self.assertFalse( node.is_inequality, "+ Operator says it is an equality or inequality operator" )
         
+    def test_operators_3(self):
+        """Support implicit multiplication before and after grouping operators
+        """
+        xml = self.mathml_wrap('<mn>3</mn><mo>(</mo><mi>x</mi><mo>)</mo><mi>y</mi>')
+        node = et.fromstring( xml, self.parser )
+        txt = node.get_sympy_text()
+        archetype = "3*(x)*y"
+        self.assertEquals( txt, archetype, 'Found {!r}, expected {!r}'.format( txt, archetype ) )
+        
+    def test_operators_4(self):
+        """Pipes converted into absolute value function calls
+        """
+        xml = self.mathml_wrap('<mo>|</mo><mi>x</mi><mo>|</mo><mo>+</mo><mo>|</mo><mi>y</mi><mo>|</mo>')
+        node = et.fromstring( xml, self.parser )
+        txt = node.get_sympy_text()
+        archetype = "Abs(x)+Abs(y)"
+        self.assertEquals( txt, archetype, 'Found {!r}, expected {!r}'.format( txt, archetype ) )
+        
+    def test_operators_5(self):
+        """Absolute value correctly supports implicit multiplication before and after
+        """
+        xml = self.mathml_wrap('<mn>3</mn><mo>|</mo><mi>x</mi><mo>|</mo><mi>y</mi>')
+        node = et.fromstring( xml, self.parser )
+        txt = node.get_sympy_text()
+        archetype = "3*Abs(x)*y"
+        self.assertEquals( txt, archetype, 'Found {!r}, expected {!r}'.format( txt, archetype ) )
+        
     def test_row_1(self):
         """Are we correctly parsing a whole equation?
         """
@@ -171,6 +198,9 @@ class TestParser( abstract_parser_test.TestCase ):
             node=et.fromstring( xml, self.parser )
             txt = node.decoded_text
             self.assertEquals( txt, to, u"decoded_text returned {!r} instead of {!r}".format( txt, to ) )
-            sympy = node.to_sympy()
-            txt = sympy.get_sympy_text()
-            self.assertEquals( txt, to, u"sympy.get_sympy_text() returned {!r} instead of {!r}".format( txt, to ) )
+            # Pipe operator has special handling for get_sympy_text()
+            if to != u'|':
+                sympy = node.to_sympy()
+                txt = sympy.get_sympy_text()
+                self.assertEquals( txt, to, u"sympy.get_sympy_text() returned {!r} instead of {!r}".format( txt, to ) )
+                
