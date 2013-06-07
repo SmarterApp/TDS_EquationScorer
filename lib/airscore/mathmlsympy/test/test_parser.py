@@ -7,35 +7,20 @@
 # https://bitbucket.org/sbacoss/eotds/wiki/AIR_Open_Source_License
 ###############################################################################
 
-import unittest
 from xml.etree import ElementTree as et
-import logging
 
-from airscore.mathmlsympy.parser import MathmlBuilder, process_mathml_data, MATHML_NAMESPACE
+from airscore.mathmlsympy.parser import process_mathml_data, MATHML_NAMESPACE
 from airscore.mathmlsympy.mathml_containers import MathmlMath, MathmlMStyle
 from airscore.mathmlsympy.mathml_number import MathmlMN
 from airscore.mathmlsympy.mathml_identifier import MathmlMI
 from airscore.mathmlsympy.mathml_operators import MathmlMO, Inequality
 from airscore.mathmlsympy.substitutions import DICTIONARY
+import abstract_parser_test
 
-XML_1 = u"""
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
- <mstyle displaystyle="true">
-  <mn>1</mn><mi>x</mi><mo>\u2664</mo><mn>3</mn>
- </mstyle>
-</math>
-""".encode('utf-8')
-
-LOGGER=logging.getLogger()
-
-class TestBuilder( unittest.TestCase ):
+class TestParser( abstract_parser_test.TestCase ):
     
-    @property
-    def parser(self):
-        return et.XMLParser( target = MathmlBuilder(), encoding="utf-8" )
-        
     def test_build_tree(self):
-        tree = et.fromstring( XML_1, self.parser )
+        tree = et.fromstring( abstract_parser_test.XML_1, self.parser )
         self.assertIsInstance( tree, MathmlMath, "Didn't get correct type for <math> element: " )
         self.assertIsInstance( tree[0], MathmlMStyle, "Didn't get correct type for <mstyle> element: " )
         self.assertIsInstance( tree[0][0], MathmlMN, "Didn't get correct type for <mn> element: " )
@@ -137,7 +122,7 @@ class TestBuilder( unittest.TestCase ):
     def test_row_1(self):
         """Are we correctly parsing a whole equation?
         """
-        node = et.fromstring( XML_1, self.parser )
+        node = et.fromstring( abstract_parser_test.XML_1, self.parser )
         self.assertIsInstance( node, MathmlMath, "Didn't get correct type for <math> element: " )
         sympy = node.to_sympy()
         self.assertEquals( sympy.get_sympy_text(), "Le(1*x,3)" )
@@ -145,7 +130,7 @@ class TestBuilder( unittest.TestCase ):
     def test_process_mathml_data_1(self):
         """Test the process_mathml_data wrapper function
         """
-        answers = process_mathml_data( XML_1 )
+        answers = process_mathml_data( abstract_parser_test.XML_1 )
         self.assertEquals( len( answers ), 1 )
         math_expression = answers[0]
         equations = math_expression.sympy_response
@@ -154,7 +139,7 @@ class TestBuilder( unittest.TestCase ):
         node = math_expression.math_node
         self.assertIsInstance( node, MathmlMath )
 
-    def test_dictionary(self):
+    def test_substitutions(self):
         """Are the XML objects correctly decoding the dictionary words?
         """
         for from_, to in DICTIONARY.iteritems():
@@ -165,7 +150,3 @@ class TestBuilder( unittest.TestCase ):
             sympy = node.to_sympy()
             txt = sympy.get_sympy_text()
             self.assertEquals( txt, to, u"sympy.get_sympy_text() returned {!r} instead of {!r}".format( txt, to ) )
-            
-            
-            
-            

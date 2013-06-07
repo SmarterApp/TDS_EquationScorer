@@ -86,7 +86,7 @@ def process_mathml_data( mathml_string, encoding=None ):
     else:
         raise ValueError( 'XML root_node must have either a <mathml:math> element or a <response> element as its root ' )
     
-    expressions = []
+    expressions = MathExpressionList()
     for math_node in math_nodes:
         if math_node.tag != Q_MATH:
             raise ValueError( "MathML2SymPyString should be called with a top level node with name 'math', this node has name {}" \
@@ -96,4 +96,4 @@ def process_mathml_data( mathml_string, encoding=None ):
 
 # These imports are at the end to fix cycles
 from base_mathml_element import BaseMathmlElement
-from math_expression import MathExpression
+from math_expression import MathExpression, MathExpressionList

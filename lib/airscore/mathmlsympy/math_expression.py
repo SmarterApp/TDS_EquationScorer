@@ -12,4 +12,10 @@ class MathExpression( object ):
     def __init__( self, math_node ):
         self.math_node = math_node
         self.sympy_response = math_node.get_sympy_text_list()
+        
+    def __str__(self):
+        return '[' + ', '.join( self.sympy_response ) + ']'
     
+class MathExpressionList( list ):
+    def __str__(self):
+        return '[' + ', '.join( [ str( exp ) for exp in self ] ) + ']'
