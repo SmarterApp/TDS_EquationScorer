@@ -13,6 +13,10 @@ from parser import mathml_element
 @mathml_element( 'mfrac' )
 class MathmlMFrac( BaseMathmlElement ):
     
+    validate_max_children = 2
+    validate_min_children = 2
+    validate_no_text = True
+    
     def get_sympy_text( self ):
         return '/'.join( [ child.get_sympy_text() for child in self ] )
 

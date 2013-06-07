@@ -13,6 +13,9 @@ from parser import mathml_element
 
 class BaseMathmlContainer( BaseMathmlElement ):
     
+    validate_max_children = -1
+    validate_no_text = True
+    
     def get_sympy_text_list(self):
         
         # Split the expression on equality or inequality symbols
@@ -21,8 +24,6 @@ class BaseMathmlContainer( BaseMathmlElement ):
         expressions = [SYMPY_NONE]
         i = 0
         for child in self[::-1]:
-            if not isinstance( child, BaseMathmlElement ):
-                raise ValueError( "I do not know how to handle the tag {}".format( child.tag ) )
             if child.is_inequality:
                 inequalities.append( child )
                 expressions[i] = tail
@@ -74,9 +75,9 @@ class MathmlMRow( BaseMathmlContainer ):
 @mathml_element( 'mfenced' )
 class MathmlMFenced( BaseMathmlContainer ):
     def get_sympy_text( self ):
-        return self.attrib['open'] \
+        return self.get( 'open', '(' ) \
             + super( MathmlMFenced, self ).get_sympy_text() \
-            + self.attrib['close']
+            + self.get( 'close', ')' )
 
 @mathml_element( 'msqrt' )
 class MathmlMSqrt( BaseMathmlContainer ):

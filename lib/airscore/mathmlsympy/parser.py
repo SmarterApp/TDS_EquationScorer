@@ -69,6 +69,7 @@ class MathmlBuilder( et.TreeBuilder ):
         el = super( MathmlBuilder, self ).end( tag )
         if isinstance( el, BaseMathmlElement ):
             el.pick_subclass()
+            el.validate()
 
 
 

@@ -21,6 +21,11 @@ class BaseMathmlElement( et.Element ):
     is_number = False
     is_non_neg_integer = False
     
+    validate_max_children = 0
+    validate_min_children = 0
+    validate_no_text = False
+    validate_required_attributes=set()
+    
     def to_sympy( self, tail=SYMPY_NONE ):
         """Return oneself as a "partial sympy object"
         
@@ -48,6 +53,34 @@ class BaseMathmlElement( et.Element ):
     
     def pick_subclass(self):
         pass
-
+    
+    def validate(self):
+        if ( self.validate_min_children == self.validate_max_children ) \
+                and len( self ) != self.validate_min_children:
+            raise ValueError( "Element {tag} must have exactly {n} children, found {m}".format(
+                    tag=self.tag, n=self.validate_min_children, m=len( self ) ) )
+            
+        if self.validate_max_children >= 0 and self.validate_max_children < len( self ):
+            raise ValueError( "Element {tag} may have no more than {n} children, found {m}".format(
+                    tag=self.tag, n=self.validate_max_children, m=len( self ) ) )
+            
+        if self.validate_min_children > len( self ):
+            raise ValueError( "Element {tag} must have at least {n} children, found {m}".format(
+                    tag=self.tag, n=self.validate_min_children, m=len( self ) ) )
+            
+        if self.validate_no_text and self.text is not None and self.text.strip():
+            raise ValueError( "Element {tag} may not have text content".format( self.tag ) )
+        
+        for child in self:
+            if not isinstance( child, BaseMathmlElement ):
+                raise ValueError( "I do not know how to handle the tag {}".format( child.tag ) )
+            if self.validate_no_text and child.tail is not None and child.tail.strip():
+                raise ValueError( "Element {tag} may not have text content".format( self.tag ) )
+            child.validate()
+        
+        for key in self.validate_required_attributes:
+            if key not in self.attrib:
+                raise ValueError( "Element {tag} missing required attribute {}".format( self.tag, key ) )
+            
 # These imports have been moved to the end to avoid import cycles
 import mathml_operators
