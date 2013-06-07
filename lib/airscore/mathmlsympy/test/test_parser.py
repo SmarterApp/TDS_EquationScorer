@@ -306,3 +306,39 @@ class TestParser( abstract_parser_test.TestCase ):
         txt = node.get_sympy_text()
         self.assertEquals( txt, archetype, "Saw {}, expected {}".format( txt, archetype ) )
 
+    def test_root(self):
+        """Configurable parentheses
+        """
+        xml = self.mathml_wrap( u'<mroot><mi>zoggart</mi><mn>3</mn></mroot>' )
+        node = et.fromstring( xml, self.parser )
+        archetype = "(zoggart)**(1/(3))"
+        txt = node.get_sympy_text()
+        self.assertEquals( txt, archetype, "Saw {}, expected {}".format( txt, archetype ) )
+
+    def test_sup(self):
+        """Configurable parentheses
+        """
+        xml = self.mathml_wrap( u'<msup><mi>zoggart</mi><mn>3</mn></msup>' )
+        node = et.fromstring( xml, self.parser )
+        archetype = "(zoggart)**(3)"
+        txt = node.get_sympy_text()
+        self.assertEquals( txt, archetype, "Saw {}, expected {}".format( txt, archetype ) )
+
+    def test_sub(self):
+        """Configurable parentheses
+        """
+        xml = self.mathml_wrap( u'<msub><mi>zoggart</mi><mn>3</mn></msub>' )
+        node = et.fromstring( xml, self.parser )
+        archetype = "zoggart_3"
+        txt = node.get_sympy_text()
+        self.assertEquals( txt, archetype, "Saw {}, expected {}".format( txt, archetype ) )
+
+    def test_sub_sup(self):
+        """Configurable parentheses
+        """
+        xml = self.mathml_wrap( u'<msubsup><mi>zoggart</mi><mi>j</mi><mn>3</mn></msubsup>' )
+        node = et.fromstring( xml, self.parser )
+        archetype = "(zoggart_j)**(3)"
+        txt = node.get_sympy_text()
+        self.assertEquals( txt, archetype, "Saw {}, expected {}".format( txt, archetype ) )
+
