@@ -9,7 +9,7 @@
 
 from parser import mathml_element, Q_MO
 from base_mathml_element import BaseMathmlElement
-from partial_sympy_object import PartialSympyObject
+from partial_sympy_object import PartialSympyObject, SYMPY_NONE
 
 @mathml_element('mo')
 class MathmlMO( BaseMathmlElement ):
@@ -21,7 +21,7 @@ class MathmlMO( BaseMathmlElement ):
         """
         super( MathmlMO, self ).__init__( tag, attrs, **kwargs )
     
-    def to_sympy( self, tail ):
+    def to_sympy( self, tail=SYMPY_NONE ):
         return PartialSympyObject( self, tail )
     
     def pick_subclass(self):
@@ -29,7 +29,7 @@ class MathmlMO( BaseMathmlElement ):
         class after it was created. We do this because we didn't know which subclass to use
         until the text of the element was filled in.
         """
-        if self.text in Inequality.texts:
+        if self.decoded_text in Inequality.texts:
             self.__class__ = Inequality
 
 
@@ -40,7 +40,7 @@ class Inequality( BaseMathmlElement ):
     is_implicit_multiplicand = False
     
     def get_sympy_text(self):
-        return self.texts[ self.text ]
+        return self.texts[ self.decoded_text ]
     
 
 PLUS_OPERATOR = MathmlMO()

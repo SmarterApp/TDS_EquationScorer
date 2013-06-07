@@ -10,6 +10,7 @@
 from xml.etree import ElementTree as et
 
 from partial_sympy_object import PartialSympyObject, SYMPY_NONE
+from substitutions import DICTIONARY
 # some in-module imports moved to end to avoid cycles
 
 class BaseMathmlElement( et.Element ):
@@ -32,9 +33,17 @@ class BaseMathmlElement( et.Element ):
         if tail.is_implicit_multiplicand:
             tail = mathml_operators.TIMES_OPERATOR.to_sympy( tail )
         return PartialSympyObject( self, tail )
-        
+    
+    @property
+    def decoded_text(self):
+        if isinstance( self.text, unicode ):
+            u = self.text
+        else:
+            u = unicode( self.text, 'utf-8' )
+        return DICTIONARY.get( u, u )
+    
     def get_sympy_text(self):
-        return self.text
+        return self.decoded_text
     
     def pick_subclass(self):
         pass

@@ -11,11 +11,12 @@ import unittest
 from xml.etree import ElementTree as et
 import logging
 
-from airscore.mathmlsympy.parser import MathmlBuilder, process_mathml_data
+from airscore.mathmlsympy.parser import MathmlBuilder, process_mathml_data, MATHML_NAMESPACE
 from airscore.mathmlsympy.mathml_containers import MathmlMath, MathmlMStyle
 from airscore.mathmlsympy.mathml_number import MathmlMN
 from airscore.mathmlsympy.mathml_identifier import MathmlMI
 from airscore.mathmlsympy.mathml_operators import MathmlMO, Inequality
+from airscore.mathmlsympy.substitutions import DICTIONARY
 
 XML_1 = u"""
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -105,6 +106,8 @@ class TestBuilder( unittest.TestCase ):
         self.assertEquals( sympy.get_sympy_text(), 'x*62', "Got the wrong content from the sympy linked list" )
         
     def test_inequality_operators_1(self):
+        """Are inequqlity operators being created with the inequality class?
+        """
         operators = { '&lt;':'Lt', u'\u2664':'Le', '=':'Eq', '\u2665':'Ge', '&gt;':'Gt', '>':'Gt'  }
     
         for operator in operators:
@@ -119,6 +122,8 @@ class TestBuilder( unittest.TestCase ):
             self.assertTrue( node.is_inequality, "Inequality says it is not an equality or inequality operator" )
             
     def test_operators_2(self):
+        """Are non-inequqlity operators not being created with the inequality class?
+        """
         node = et.fromstring( '<mo xmlns="http://www.w3.org/1998/Math/MathML">+</mo>',
                                 self.parser )
         self.assertFalse( isinstance( node, Inequality ), "Thinks <mo>+</mo> element os an inequality" )
@@ -130,12 +135,16 @@ class TestBuilder( unittest.TestCase ):
         self.assertFalse( node.is_inequality, "+ Operator says it is an equality or inequality operator" )
         
     def test_row_1(self):
+        """Are we correctly parsing a whole equation?
+        """
         node = et.fromstring( XML_1, self.parser )
         self.assertIsInstance( node, MathmlMath, "Didn't get correct type for <math> element: " )
         sympy = node.to_sympy()
         self.assertEquals( sympy.get_sympy_text(), "Le(1*x,3)" )
          
     def test_process_mathml_data_1(self):
+        """Test the process_mathml_data wrapper function
+        """
         answers = process_mathml_data( XML_1 )
         self.assertEquals( len( answers ), 1 )
         math_expression = answers[0]
@@ -145,4 +154,18 @@ class TestBuilder( unittest.TestCase ):
         node = math_expression.math_node
         self.assertIsInstance( node, MathmlMath )
 
-    
+    def test_dictionary(self):
+        """Are the XML objects correctly decoding the dictionary words?
+        """
+        for from_, to in DICTIONARY.iteritems():
+            xml = u'<?xml version="1.0" encoding="UTF-8"?><mo xmlns="{ns}">{txt}</mo>'.format( ns=MATHML_NAMESPACE, txt=from_ ).encode('utf-8')
+            node=et.fromstring( xml, self.parser )
+            txt = node.decoded_text
+            self.assertEquals( txt, to, u"decoded_text returned {!r} instead of {!r}".format( txt, to ) )
+            sympy = node.to_sympy()
+            txt = sympy.get_sympy_text()
+            self.assertEquals( txt, to, u"sympy.get_sympy_text() returned {!r} instead of {!r}".format( txt, to ) )
+            
+            
+            
+            
