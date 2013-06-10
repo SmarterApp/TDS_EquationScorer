@@ -42,6 +42,10 @@ class BaseMathmlElement( et.Element ):
     
     @property
     def decoded_text(self):
+        """Return the text content of self as unicode.
+        """
+        if self.text is None:
+            return None
         if isinstance( self.text, unicode ):
             u = self.text
         else:

@@ -12,18 +12,18 @@ import logging
 from xml.etree import ElementTree as et
 # Note: in-module imports are moved to end to fix cycles
 
-MATHML_NAMESPACE = 'http://www.w3.org/1998/Math/MathML'
+MATHML_NAMESPACE = u'http://www.w3.org/1998/Math/MathML'
 _ELEMENT_CLASSES = {}
 
 LOGGER = logging.getLogger('airscore.mathmlsympy.parser')
 
 def q( s, namespace=MATHML_NAMESPACE ):
-    return '{{{}}}{}'.format( namespace, s )
+    return u'{{{}}}{}'.format( namespace, s )
 
-Q_MATH = q('math')
-Q_RESPONSE = 'response'
-Q_MSTYLE = q('mstyle')
-Q_MO = q('mo')
+Q_MATH = q(u'math')
+Q_RESPONSE = u'response'
+Q_MSTYLE = q(u'mstyle')
+Q_MO = q(u'mo')
 
 def mathml_element( *args ):
     """A decorator which registers the decorated class as a mathml element class
@@ -76,14 +76,14 @@ class MathmlBuilder( et.TreeBuilder ):
 def process_mathml_data( mathml_string, encoding=None ):
     if isinstance( mathml_string, unicode ):
         if encoding is None:
-            encoding = 'utf-8'
+            encoding = 'UTF-8'
         mathml_string = mathml_string.encode( encoding )
     parser = et.XMLParser( target = MathmlBuilder(), encoding=encoding )
     root_node = et.fromstring( mathml_string, parser )
     if root_node.tag == Q_MATH:
         math_nodes = [ root_node ]
     elif root_node.tag == Q_RESPONSE:
-        math_nodes = root_node.findall( './*' )
+        math_nodes = root_node.findall( u'./*' )
     else:
         raise ValueError( 'XML root_node must have either a <mathml:math> element or a <response> element as its root ' )
     

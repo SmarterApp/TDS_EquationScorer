@@ -14,8 +14,15 @@ class MathExpression( object ):
         self.sympy_response = math_node.get_sympy_text_list()
         
     def __str__(self):
-        return '[' + ', '.join( self.sympy_response ) + ']'
+        return unicode( self ).encode('UTF-8')
+        
+    def __unicode__(self):
+        return u', '.join( self.sympy_response )
     
 class MathExpressionList( list ):
+
     def __str__(self):
-        return '[' + ', '.join( [ str( exp ) for exp in self ] ) + ']'
+        return unicode( self ).encode('UTF-8')
+        
+    def __unicode__(self):
+        return u'[' + u', '.join( [ unicode( exp ) for exp in self ] ) + ']'

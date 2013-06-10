@@ -11,7 +11,7 @@ from parser import mathml_element
 from base_mathml_element import BaseMathmlElement
 from partial_sympy_object import PartialSympyObject, SYMPY_NONE
 
-FUNCTION_NAMES = set( ( "sin", "cos", "tan", "asin", "acos", "atan", "log", "ln", "exp", "f", "g" ) )
+FUNCTION_NAMES = set( ( u"sin", u"cos", u"tan", u"asin", u"acos", u"atan", u"log", u"ln", u"exp", u"f", u"g" ) )
 
 @mathml_element( 'mi' )
 class MathmlMI( BaseMathmlElement ):
@@ -22,4 +22,3 @@ class MathmlMI( BaseMathmlElement ):
 class Function( MathmlMI ):
     def to_sympy( self, tail=SYMPY_NONE ):
         return PartialSympyObject( self, tail )
-

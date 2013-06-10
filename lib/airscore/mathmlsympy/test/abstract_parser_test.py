@@ -15,7 +15,7 @@ from airscore.mathmlsympy.parser import MathmlBuilder
 XML_1 = u"""
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
  <mstyle displaystyle="true">
-  <mn>1</mn><mi>x</mi><mo>\u2664</mo><mn>3</mn>
+  <mn>1</mn><mi>x</mi><mo>\u2264</mo><mn>3</mn>
  </mstyle>
 </math>
 """.encode('UTF-8')

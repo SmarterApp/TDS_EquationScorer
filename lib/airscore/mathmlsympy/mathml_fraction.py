@@ -18,7 +18,7 @@ class MathmlMFrac( BaseMathmlElement ):
     validate_no_text = True
     
     def get_sympy_text( self ):
-        return '/'.join( [ child.get_sympy_text() for child in self ] )
+        return u'/'.join( [ child.get_sympy_text() for child in self ] )
 
     @property
     def is_implicit_addend( self ):

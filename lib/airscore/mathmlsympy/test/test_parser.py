@@ -182,7 +182,7 @@ class TestParser( abstract_parser_test.TestCase ):
     def test_inequality_operators_1(self):
         """Are inequqlity operators being created with the inequality class?
         """
-        operators = { '&lt;':'Lt', u'\u2664':'Le', '=':'Eq', '\u2665':'Ge', '&gt;':'Gt', '>':'Gt'  }
+        operators = { u'&lt;':u'Lt', u'\u2264':u'Le', u'=':u'Eq', u'\u2265':u'Ge', u'&gt;':u'Gt', u'>':u'Gt'  }
     
         for operator in operators:
             operator = operator.encode('utf-8')
@@ -341,4 +341,23 @@ class TestParser( abstract_parser_test.TestCase ):
         archetype = "(zoggart_j)**(3)"
         txt = node.get_sympy_text()
         self.assertEquals( txt, archetype, "Saw {}, expected {}".format( txt, archetype ) )
+        
+    def test_weird_character(self):
+        """What happens when our equation contains a character that isn't one of the encodings
+        that we've programmed for
+        """
+        
+        not_equal = u'\u2260'
+        xml = self.mathml_wrap( u'<mi>x</mi><mo>{}</mo><mi>y</mi>'.format( not_equal ) )
+        node = et.fromstring( xml, self.parser )
+        archetype = u"x{}y".format( not_equal )
+        txt = node.get_sympy_text()
+        self.assertEquals( txt, archetype, u"Saw {}, expected {}".format( txt, archetype ) )
+        
+        archetype = ( u'['+archetype+']' ).encode( 'UTF-8' )
+        fully_processed = str( process_mathml_data( xml ) )
+        self.assertEquals( fully_processed, archetype, u"Saw {}, expected {}".format( fully_processed, archetype ) )
+        
+        
+        
 

@@ -38,8 +38,9 @@ class BaseMathmlContainer( BaseMathmlElement ):
         ret = []
         if len( inequalities ) == 0:
             ret.append( expressions[0].get_sympy_text() )
-        for i in range( len( inequalities ) ):
-            ret.append( '{}({},{})'.format( inequalities[i].get_sympy_text(),
+        while i > 0:
+            i -= 1
+            ret.append( u'{}({},{})'.format( inequalities[i].get_sympy_text(),
                     expressions[i+1].get_sympy_text(),
                     expressions[i].get_sympy_text() ) )
         return ret
@@ -48,7 +49,7 @@ class BaseMathmlContainer( BaseMathmlElement ):
         lst = self.get_sympy_text_list()
         s = ','.join( lst )
         if len( lst ) > 1:
-            return '[' + s + ']'
+            return u'[' + s + u']'
         else:
             return s
         
@@ -66,7 +67,7 @@ class MathmlMStyle( BaseMathmlContainer ):
 @mathml_element( 'mrow' )
 class MathmlMRow( BaseMathmlContainer ):
     def get_sympy_text( self ):
-        return '(' + super( MathmlMRow, self ).get_sympy_text() + ')'
+        return u'(' + super( MathmlMRow, self ).get_sympy_text() + u')'
 
     @property
     def is_non_neg_integer(self):
@@ -75,12 +76,12 @@ class MathmlMRow( BaseMathmlContainer ):
 @mathml_element( 'mfenced' )
 class MathmlMFenced( BaseMathmlContainer ):
     def get_sympy_text( self ):
-        return self.get( 'open', '(' ) \
+        return self.get( 'open', u'(' ) \
             + super( MathmlMFenced, self ).get_sympy_text() \
-            + self.get( 'close', ')' )
+            + self.get( 'close', u')' )
 
 @mathml_element( 'msqrt' )
 class MathmlMSqrt( BaseMathmlContainer ):
     def get_sympy_text( self ):
-        return 'sqrt(' + super( MathmlMSqrt, self ).get_sympy_text() + ')'
+        return u'sqrt(' + super( MathmlMSqrt, self ).get_sympy_text() + u')'
 

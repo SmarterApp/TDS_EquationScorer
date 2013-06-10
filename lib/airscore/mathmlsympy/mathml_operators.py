@@ -39,7 +39,7 @@ class MathmlMO( BaseMathmlElement ):
 
 class Inequality( MathmlMO ):
     
-    symbols = { '<':'Lt', '&lt;':'Lt', u'\u2664':'Le', '=':'Eq', '\u2665':'Ge', '&gt;':'Gt', '>':'Gt'  }
+    symbols = { u'<':u'Lt', u'&lt;':u'Lt', u'\u2264':u'Le', u'=':u'Eq', u'\u2265':u'Ge', u'&gt;':u'Gt', u'>':u'Gt'  }
     is_inequality = True
     
     def get_sympy_text(self):
@@ -47,7 +47,7 @@ class Inequality( MathmlMO ):
 
 class GroupClose( MathmlMO ):
     
-    symbols = (')',)
+    symbols = (u')',)
     
     def to_sympy( self, tail=SYMPY_NONE ):
         # Revert to the "expression" logic that is on the BaseMathmlExpression class
@@ -56,12 +56,12 @@ class GroupClose( MathmlMO ):
     
 class GroupOpen( MathmlMO ):
     
-    symbols = ('(',)
+    symbols = (u'(',)
     is_implicit_multiplicand = True
     
 class Pipe( MathmlMO ):
     
-    symbols = ('|',)
+    symbols = (u'|',)
     
     @property
     def is_implicit_multiplicand(self):
@@ -69,9 +69,9 @@ class Pipe( MathmlMO ):
 
     def get_sympy_text( self ):
         if self.is_opening:
-            return 'Abs('
+            return u'Abs('
         else:
-            return ')'
+            return u')'
     
     def to_sympy( self, tail=SYMPY_NONE ):
         self.is_opening = tail.is_closed
@@ -87,12 +87,12 @@ class Pipe( MathmlMO ):
 # a mathml operator in the XML. 
 class DecimalPoint( mathml_number.MathmlMN ):
     
-    symbols = '.'
+    symbols = u'.'
 
 PLUS_OPERATOR = MathmlMO()
-PLUS_OPERATOR.text="+"
+PLUS_OPERATOR.text = u"+"
 PLUS_OPERATOR.pick_subclass()
 
 TIMES_OPERATOR = MathmlMO()
-TIMES_OPERATOR.text="*"
+TIMES_OPERATOR.text = u"*"
 TIMES_OPERATOR.pick_subclass()

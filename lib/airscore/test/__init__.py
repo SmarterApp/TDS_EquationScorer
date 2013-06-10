@@ -7,8 +7,3 @@
 # https://bitbucket.org/sbacoss/eotds/wiki/AIR_Open_Source_License
 ###############################################################################
 
-import logging.config
-import sys
-logging.getLogger().setLevel('INFO')
-logging.getLogger().addHandler(logging.StreamHandler(sys.stderr))
-
