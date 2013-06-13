@@ -1,0 +1,45 @@
+Equation Scoring Engine
+Copyright (c) 2013 American Institutes for Research
+ 
+Distributed under the AIR Open Source License, Version 1.0
+See accompanying file AIR-License-1_0.txt or at 
+https://bitbucket.org/sbacoss/eotds/wiki/AIR_Open_Source_License
+
+The AIR Equation Scoring Engine is a Python application for evaulating
+answers to tests in mathematics. The answers are submitted in MathML,
+and are evaluated by comparing to a MathML rubric, using the Sympy
+symbolic mathematics package.
+
+The AIR Equation Scoring Engine consists of two assemblies. The main engine
+has a Python API. It depends only on Sympy. This is located in the package
+"airscore"
+
+The second assembly provides a RESTful web interface to the main engine. This
+assembly depends on Django and the Django REST framework, in addition to the
+dependencies for the main assembly. 
+
+DEPENDENCIES
+============
+The AIR Equation Scoring Engine was developed on Python 2.7.5.
+
+All of the required libraries can be installed from PyPi using
+"pip install <package-name>"
+
+Sympy: http://sympy.org/en/index.html
+Django: https://www.djangoproject.com/
+Django REST framework: http://django-rest-framework.org/
+
+INSTALLATION
+============
+After downloading the project, add the directory "lib" to your Python path, or
+else copy or symlink the contents of "lib" into a directory that is on your
+Python path.
+
+If you are using the REST interface, you must also add the directory
+"eqscorer_rest" to your Python path, or else copy or symlink the contents of
+"eqscorer_rest" into a directory that is on your Python path.
+
+NOTES FOR ECLIPSE USERS
+=======================
+The project directory may be opened as a PyDev-Django project in eclipse. However
+Eclipse makes default assumptions about the location of the 

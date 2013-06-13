@@ -2,7 +2,8 @@ syntax: glob
 *.pyc
 .project
 .pydevproject
+.settings
 CVS
 
 syntax: regexp
-doc/sphinx/build
+doc/_build
