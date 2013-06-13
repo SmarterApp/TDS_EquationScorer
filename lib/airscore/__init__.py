@@ -7,3 +7,5 @@
 # https://bitbucket.org/sbacoss/eotds/wiki/AIR_Open_Source_License
 ###############################################################################
 
+from equiv import isEquivalent
+from mathmlsympy.parser import process_mathml_data
