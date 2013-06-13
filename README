@@ -42,4 +42,10 @@ If you are using the REST interface, you must also add the directory
 NOTES FOR ECLIPSE USERS
 =======================
 The project directory may be opened as a PyDev-Django project in eclipse. However
-Eclipse makes default assumptions about the location of the 
+Eclipse makes default assumptions about the location of the settings module that
+are wrong for this project. Eclipse users should open the project properties
+window and select the "PyDev - Django" page. On this page, set the value for
+"Django settings module" to "eqscorer_rest.settings"
+
+If you do not perform this step, you will receive errors when attempting to run
+the test server via "Run As -> PyDev: Django"

@@ -42,10 +42,10 @@ class IsEquivalent( APIView ):
         with ErrorGuard( response, Exception, "Unable to parse rubric as mathml", 400 ):
             rubric = unicode( process_mathml_data( valid_request.rubric ) )
             
-        with ErrorGuard( response, Exception, "Unable to parse answer as mathml", 400 ):
+        with ErrorGuard( response, Exception, "Unable to parse answer as mathml", 200 ):
             answer = unicode( process_mathml_data( valid_request.answer ) )
 
-        with ErrorGuard( response, Exception, "Unable to compare answer with rubric", 400 ):
+        with ErrorGuard( response, Exception, "Unable to compare answer with rubric", 200 ):
             p = valid_request.parameters
             correct = isEquivalent( answer, rubric,
                     allowChangeOfVariable = p.allow_change_of_variable,
@@ -74,8 +74,8 @@ class ErrorGuard( APIException ):
         pass
     
     def __exit__( self, exc_type, exc_value, traceback ):
-        if isinstance( exc_type, self.expected ):
-            self.response.reason = self.message
+        if isinstance( exc_value, self.expected ):
+            self.response.reason = self.detail
             self.exception = exc_value
             raise self
         return None

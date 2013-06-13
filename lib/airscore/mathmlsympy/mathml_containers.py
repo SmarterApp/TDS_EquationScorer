@@ -58,7 +58,7 @@ class MathmlMath( BaseMathmlContainer ):
     def get_sympy_text_list(self):
         if len( self ) == 1 and isinstance( self[0], MathmlMStyle ):
             return self[0].get_sympy_text_list()
-        return super( self, MathmlMath ).get_sympy_text_list()
+        return super( MathmlMath, self ).get_sympy_text_list()
 
 @mathml_element( 'mstyle' )
 class MathmlMStyle( BaseMathmlContainer ):
