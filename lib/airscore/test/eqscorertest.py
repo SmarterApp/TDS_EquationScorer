@@ -9,10 +9,10 @@
 
 import unittest
 
-from airscore.equiv import isEquivalent
+from airscore.eqscorer import isEquivalent
 from sympy import S
 
-class EquivTest( unittest.TestCase ):
+class EqScorerTest( unittest.TestCase ):
 #tests to remain valid after implementation change
         
     def eqtestlib( self ):
