@@ -5,6 +5,9 @@
 
 Quick Start: REST interface on Apache 2.4 for Windows
 =====================================================
+.. contents:: Contents
+   :local:
+
 
 This document describes how to get up-and-running with the :program:`AIR Equation Scoring Engine`'s
 RESTful web interface on a :program:`Windows` machine running :program:`Apache httpd` version 2.4.

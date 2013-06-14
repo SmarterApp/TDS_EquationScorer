@@ -5,3 +5,5 @@
 
 Extending the AIR Equation Scoring Engine
 =========================================
+.. contents:: Contents
+   :local:

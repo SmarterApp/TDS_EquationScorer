@@ -10,7 +10,48 @@
 from sympy import expand, nsimplify, simplify, sympify, solve, Equality, Symbol
 from sympy.core.sympify import SympifyError
 
-def isEquivalent(response, rubric, allowChangeOfVariable = False, allowSimplify = True, trigIdentities = False, logIdentities = False, forceAssumptions = False):
+def isEquivalent(response, rubric, allowChangeOfVariable = False, allowSimplify = True, trigIdentities = False,
+                 logIdentities = False, forceAssumptions = False):
+    """True if Sympy is able to determine that the two expressions are equivalent.
+    
+    This function requires two parameters: a test answer and a rubric. Each of these
+    is a string. Each string defines an equality, an inequality, or an expression in
+    a form that can be parsed by the Sympy symbolic mathematics library. Alternatively,
+    the answer or rubric may be a list of such equations, inequalities or expressions,
+    enclosed in square brackets and separated by commas.
+    
+    Additional optional parameters control the manipulations that Sympy will make when
+    attempting to determine the equivalence of the response and the rubric
+    
+    :param response: The test response
+    
+    :type response: str
+    
+    :param rubric: The rubric for the test questions
+    
+    :type rubric: str
+    
+    :param allowChangeOfVariables:
+    
+    :type allowChangeOfVariables: boolean
+
+    :param allowSimplify:
+    
+    :type allowSimplify: boolean
+
+    :param trigIdentities:
+    
+    :type trigIdentities: boolean
+
+    :param logIdentities:
+    
+    :type logIdentities: boolean
+
+    :param forceAssumptions:
+    
+    :type forceAssumptions: boolean
+
+    """
     response_expr = sympify(response, {'evaluate':'evaluate'})
     rubric_expr = sympify(rubric, {'evaluate':'evaluate'})
     

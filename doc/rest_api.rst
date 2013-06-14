@@ -7,6 +7,8 @@
 
 AIR Equation Scoring Engine RESTful Web Interface
 =================================================
+.. contents:: Contents
+   :local:
 
 The REST interface has a single access point.  A ``POST`` to :file:``/isequivalent/``
 with a JSON payload, returns a JSON object containing the results of the call.
