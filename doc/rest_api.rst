@@ -26,9 +26,9 @@ Parameters
   
   Any "special" characters in the answer may be included in one of three ways:
   
-    - They may simply be embedded as unicode in the encoding of the request ( e.g., |le| )
+    - They may simply be embedded as unicode in the charset of the request ( e.g., |le| )
     
-    - They may be escaped as XML escape sequences ( e.g., ``&#x2264``)
+    - They may be escaped as XML escape sequences ( e.g., ``&#x2264;``)
     
     - They may be escaped as JSON escape sequences (e.g., ``\u2264``)
 
@@ -104,7 +104,7 @@ Example 1::
 
     POST /isequivalent/ HTTP/1.1
     Host: example.com
-    Content-Type: application/json
+    Content-Type: application/json; charset=UTF-8
     Accept: application/json
     
     {
@@ -127,7 +127,7 @@ Example 2 (Incorrect answer)::
 
     POST /isequivalent/ HTTP/1.1
     Host: example.com
-    Content-Type: application/json
+    Content-Type: application/json; charset=UTF-8
     Accept: application/json
     
     {
@@ -150,7 +150,7 @@ Example 3 (Parameters for equivalence check)::
 
     POST /isequivalent/ HTTP/1.1
     Host: example.com
-    Content-Type: application/json
+    Content-Type: application/json; charset=UTF-8
     Accept: application/json
     
     {

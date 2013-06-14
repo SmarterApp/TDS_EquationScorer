@@ -16,6 +16,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
    
+   quickstart
    python_api
    rest_api
    extending
