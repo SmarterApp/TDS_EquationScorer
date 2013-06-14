@@ -52,7 +52,7 @@ def mathml_element( *args ):
             ...
             
     Finally, if you have a class that should be associated with multiple MathML tag names,
-    you can specify all of the names as arguments to the :deco:`mathml_element decorator`\ ::
+    you can specify all of the names as arguments to the :func:`mathml_element decorator`\ ::
     
         @mathml_element( 'bob', 'jim', 'joe' )
         class MathMLBob( BaseMathmlElement ):

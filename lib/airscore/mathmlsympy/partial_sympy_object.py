@@ -21,6 +21,37 @@ class PartialSympyObject( object ):
     :param tail: The next item in the list
     
     :type tail: :class:`PartialSympyObject`
+    
+    .. attribute:: next
+    
+        (:class:`PartialSympyObject`) - The next rightward neighbor in the list.
+        
+    .. attribute:: is_closed
+    
+        (:class:`bool`) - Used in balancing absolute value bars.  :const:`True`
+        if the parser has encountered an odd number of absolute value bars to
+        the right of this point.
+        
+    .. attribute:: is_implicit_mutliplicand
+    
+        (:class:`bool`) - The `is_implicit_multiplicand` attribute of the
+        :class:`BaseMathmlElement` that generated this object.
+        
+    .. attribute:: is_implicit_addend
+    
+        (:class:`bool`) - The `is_implicit_addend` attribute of the
+        :class:`BaseMathmlElement` that generated this object.
+        
+    .. attribute:: is_number
+    
+        (:class:`bool`) - The `is_number` attribute of the
+        :class:`BaseMathmlElement` that generated this object.
+        
+    .. attribute:: text
+    
+        (:class:`unicode`) - The result of the :meth:`BaseMathmlElement.get_sympy_text`
+        method of the :class:`BaseMathmlElement` object that generated this
+        object.
     '''
     def __init__( self, el, tail ):
         self.next = tail
@@ -32,12 +63,22 @@ class PartialSympyObject( object ):
         self.text = el.get_sympy_text() if el is not None else ''
         
     def itertext(self):
+        """Iterate through the linked list, returning the :attr:`text` attribute
+        of each node.
+        
+        :returns: :class:`iterator` of :class:`unicode`
+        """
         x = self
         while x is not SYMPY_NONE:
             yield x.text
             x = x.next
             
     def get_sympy_text(self):
+        """The concatenated :attr:`text` attributes of this node and all of the
+        nodes to its right.
+        
+        :returns: :class:`unicode`
+        """
         return ''.join( self.itertext() )
         
 SYMPY_NONE = PartialSympyObject( None, None )

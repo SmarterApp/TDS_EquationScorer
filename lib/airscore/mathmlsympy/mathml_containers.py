@@ -12,11 +12,38 @@ from partial_sympy_object import SYMPY_NONE
 from parser import mathml_element
 
 class BaseMathmlContainer( BaseMathmlElement ):
+    """The base class for all MathML container elements.
+    
+    The base class for all MathML elements that can contain an arbitrary list
+    of other MathML elements. This includes elements like <math> and <row>, as
+    well as elements listed in the `MathML <www.w3.org/math>`_ spec as containing
+    an implicit <row> element.
+    """
     
     validate_max_children = -1
     validate_no_text = True
     
     def get_sympy_text_list(self):
+        """Return a list containing text representations of simple equations or inequalities.
+        
+        This method is the main loop of the parser for most MathML expressions. Most
+        containers will not need to override this method, but it is worth understanding how
+        it works.  One oddity worth noting is that the parser parses the expression from
+        right to left, instead of the usual left-to-right.
+        
+        If the expression is a "chained" equation, containing
+        more than one equals or inequality operator, then this function will return multiple
+        strings in its return list. Each return value will be a simple equation or
+        inequality--i.e., one that contains only one equals or inequality operator.
+        
+        If the expression is already a simple equation or inequality, then a list containing a
+        single string represnting that equation or inequality will be returned.
+        
+        If the expression contains no equality or inequality operators, then a list containing a
+        single string representing that expression will be returned.
+        
+        :returns: :class:`list` of :class:`str`
+        """
         
         # Split the expression on equality or inequality symbols
         tail = SYMPY_NONE

@@ -14,6 +14,44 @@ from substitutions import DICTIONARY
 # some in-module imports moved to end to avoid cycles
 
 class BaseMathmlElement( et.Element ):
+    """This is the base class for all MathML elements in the XML tree
+    
+    .. attribute:: is_implicit_addend
+    
+       :class:`boolean` This node may appear as the implicit addend of an integer (as the fractional part of a mixed number).
+       
+    .. attribute:: is_implicit_multiplicand
+    
+       :class:`boolean` When a number or a symbol appears to the left of this node, an implicit multiplication should be performed.
+       
+    .. attribute:: is_inequality
+    
+       :class:`boolean` This is an equal sign or inequality operator.  Identifies nodes where chained equations will be broken.
+       
+    .. attribute:: is_number
+    
+       :class:`boolean` This node contains a number (digits, decimal points, etc).
+       
+    .. attribute:: is_non_neg_integer
+    
+       :class:`boolean` This node is a non-negative integer. This flag is used to detect when the numerator and denominator of a fraction contain simple numbers, allowing us to use the fraction as part of a mixed number.
+       
+    .. attribute:: validate_max_children
+    
+       :class:`int` Maximum number of children permitted for this node.
+
+    .. attribute:: validate_min_children
+    
+       :class:`int` Minimum number of children permitted for this node.
+       
+    .. attribute:: validate_no_text
+    
+       :class:`boolean` If :const:`True`, it is an error for this node to contain text directly.  Text may still exist inside of nested nodes.
+       
+    .. attribute:: validate_required_attributes
+    
+      :class:`set` of :class:`str`. A set containing the names of required attributes. Not namespace aware.
+    """
 
     is_implicit_addend = False
     is_implicit_multiplicand = True
@@ -29,6 +67,16 @@ class BaseMathmlElement( et.Element ):
     def to_sympy( self, tail=SYMPY_NONE ):
         """Return oneself as a "partial sympy object"
         
+        You will need to override this routine if you are changing the way this
+        node combines with its neighbor nodes.  The default implementation
+        concatenates this node with its right-hand neighbor, adding a mutliplcation
+        operator to the list first if the right-hand neighbor is a suitable implicit
+        multiplicand.
+        
+        Override :meth:`get_sympy_text` instead if you need to change how this node
+        and its children are represented in the output, but not how this node is
+        related to its siblings.
+        
         :param tail: The head of a linked list of sympy objects which will become
             the tail of the newly created object
 
@@ -42,7 +90,10 @@ class BaseMathmlElement( et.Element ):
     
     @property
     def decoded_text(self):
-        """Return the text content of self as unicode.
+        """:class:`unicode` The text content
+        
+        The default implementation decodes a limited dictionary of common unicode
+        values to sympy equivalents.
         """
         if self.text is None:
             return None
@@ -53,12 +104,70 @@ class BaseMathmlElement( et.Element ):
         return DICTIONARY.get( u, u )
     
     def get_sympy_text(self):
+        """Returns a string representing this node, including all of its children, in the parsed Sympy output
+        
+        This is the main method that you will need to override in order
+        to control how this node and its children are rendered in the sympy output.
+        
+        The default implementation simply returns the :attr:`decode_text` attribute.
+        
+        Override :meth:`to_sympy` instead if you need to control how this node relates
+        to its neighbors.  
+        
+        :returns: :class:`unicode` - The string representing this node in a sympy expression
+        """
         return self.decoded_text
     
     def pick_subclass(self):
+        """Change the leopard's spots to zebra stripes
+        
+        The :mod:`xml.etree.ElementTree` parsing mechanism forces us to choose
+        the class for new elements when the start tag has been parsed, but before
+        any of the content has been read.  There are numerous MathML constructs
+        for which we want to have different classes, but they are represented
+        by the same start tag, and we don't know until the content is read
+        which class we should use.  Our parser calls this method after the end
+        tag has been processed, in order to give the element a chance to make
+        any changes it needs to make to finalize its class selection.
+        
+        In most cases, this method does nothing (the default behavior). In a few
+        cases, however, this method will assign a new value to the instance's
+        :attr:`__class__` property in order to change the object into an
+        instance of a subclass of its original class.
+        
+        We are using an admittedly obscure Python "feature," and I can't recommend
+        that you adopt the practice of altering the classes of existing objects as
+        a habit. But for this limited purpose it seemed the cleanest solution.
+        
+        :returns: :const:`None`
+        """
         pass
     
     def validate(self):
+        """Validate the node content
+        
+        This method is called during the processing of the XML end tag, immediately
+        after the call to :meth:`pick_subclass`. Subclasses should perform any
+        required validation of the newly-created MathML object.  An error should
+        be raised for a validation failure (usually :class:`ValueError`)
+        
+        The default implementation performs the following steps:
+        
+         - Validate the number of children against the :attr:`validate_min_children`
+           and :attr:`validate_max_children` properties
+           
+         - If :attr:`validate_no_text` is :const:`True`, confirm that the element contains
+           no text.
+           
+         - Confirm that children (if any) are subclasses of :class:`BaseMathmlElement`
+         
+         - Confirm that any attributes listed in :attr:`validate_required_attributes`
+           are present (but perform no validation on the attribute values)
+           
+        :returns: :const:`None`
+        
+        :raises: :exc:`ValueError`
+        """
         if ( self.validate_min_children == self.validate_max_children ) \
                 and len( self ) != self.validate_min_children:
             raise ValueError( "Element {tag} must have exactly {n} children, found {m}".format(
