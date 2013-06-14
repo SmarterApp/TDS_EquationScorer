@@ -11,5 +11,5 @@ from django.conf.urls import patterns, url
 import isequivalent
 
 urlpatterns = patterns('',
-    url(r'^isequivalent/$', isequivalent.IsEquivalent.as_view()),
+    url(r'^isequivalent$', isequivalent.IsEquivalent.as_view()),
 )

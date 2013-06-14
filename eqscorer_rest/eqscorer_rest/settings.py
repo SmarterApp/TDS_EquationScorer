@@ -9,6 +9,8 @@
 
 # Django settings for eqscorer_rest project.
 
+APPEND_SLASH = False
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
