@@ -27,17 +27,44 @@ Q_MO = q(u'mo')
 
 def mathml_element( *args ):
     """A decorator which registers the decorated class as a mathml element class
+    
+    This decorator registers the association between a class and an element name
+    for the :class:`MathMLBuilder`. In order to have the :class:`MathMLBuilder`
+    use a particular class instead of the default :class:`xml.etree.ElementTree.Element`
+    class to represent a given XML element, decorate your class definition with this
+    decorator.
+    
+    There are three permitted calling conventions.  You can use the decorator
+    without arguments, like so::
+        
+        @mathml_element
+        class bob( BaseMathmlElement ):
+            ...
+     
+    in which case the new class will be used for elements named <bob> in the MathML
+    namespace.  This usage is not ideal, as it requires your Python class to have the
+    same name (including case) as the MathML element.
+    
+    You avoid this problem by specifying an element name like this::
+    
+        @mathml_element( 'bob' )
+        class MathMLBob( BaseMathmlElement ):
+            ...
+            
+    Finally, if you have a class that should be associated with multiple MathML tag names,
+    you can specify all of the names as arguments to the :deco:`mathml_element decorator`\ ::
+    
+        @mathml_element( 'bob', 'jim', 'joe' )
+        class MathMLBob( BaseMathmlElement ):
+            ...
+            
+    In every case, the classes will only be used for elements in the MathML namespace
+    (`http://www.w3.org/1998/Math/MathML`)
     """
     if len( args ) == 1 and isinstance( args[0], type ):
         name = q( args[0].__name__ )
         _ELEMENT_CLASSES[ name ] = args[0]
         return args[0]
-    elif len( args ) == 1 and isinstance( args[0], ( str, unicode ) ):
-        def deco( cls ):
-            name = q( args[0] )
-            _ELEMENT_CLASSES[ name ] = cls
-            return cls
-        return deco
     else:
         def deco( cls ):
             for name in args:
@@ -48,6 +75,14 @@ def mathml_element( *args ):
 
 
 class MathmlBuilder( et.TreeBuilder ):
+    """Tree Builder to create MathML-aware objects
+    
+    This class inherits from the :class:`xml.etree.ElementTree.TreeBuilder` in
+    the standard Python libraries. It is used when parsing an XML tree that
+    contains MathML expressions. By using this builder instead of the default
+    builder, we create a tree that contains our custom MathML objects, rather
+    than the default :class:`xml.etree.ElementTree.Element` objects.
+    """
     
     def __init__(self):
         super( MathmlBuilder, self ).__init__( self.mathml_element_factory )
