@@ -3,9 +3,9 @@ Copyright (c) 2013 American Institutes for Research
  
 Distributed under the AIR Open Source License, Version 1.0
 See accompanying file AIR-License-1_0.txt or at 
-https://bitbucket.org/sbacoss/eotds/wiki/AIR_Open_Source_License
+https://bitbucket.org/sbacoss/equationscorer/wiki/AIR_Open_Source_License
 
-The AIR Equation Scoring Engine is a Python application for evaulating
+The AIR Equation Scoring Engine is a Python application for evaluating
 answers to tests in mathematics. The answers are submitted in MathML,
 and are evaluated by comparing to a MathML rubric, using the Sympy
 symbolic mathematics package.

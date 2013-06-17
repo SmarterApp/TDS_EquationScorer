@@ -1,7 +1,7 @@
 .. Copyright (c) 2013 American Institutes for Research
    Distributed under the AIR Open Source License, Version 1.0
    See accompanying file AIR-License-1_0.txt or at 
-   https://bitbucket.org/sbacoss/equationscorer/wiki/AIR%20Open%20Source%20License%201.0
+   https://bitbucket.org/sbacoss/equationscorer/wiki/AIR_Open_Source_License_1.0
 
 .. AIR Equation Scoring Engine documentation master file, created by
    sphinx-quickstart on Thu Jun 13 10:11:59 2013.

@@ -2,7 +2,7 @@
 # 
 # Distributed under the AIR Open Source License, Version 1.0
 # See accompanying file AIR-License-1_0.txt or at 
-# https://bitbucket.org/sbacoss/equationscorer/wiki/AIR%20Open%20Source%20License%201.0
+# https://bitbucket.org/sbacoss/equationscorer/wiki/AIR_Open_Source_License_1.0
 
 #
 # Makefile for Sphinx documentation

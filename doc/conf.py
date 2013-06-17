@@ -4,7 +4,7 @@
 # 
 # Distributed under the AIR Open Source License, Version 1.0
 # See accompanying file AIR-License-1_0.txt or at 
-# https://bitbucket.org/sbacoss/equationscorer/wiki/AIR%20Open%20Source%20License%201.0
+# https://bitbucket.org/sbacoss/equationscorer/wiki/AIR_Open_Source_License_1.0
 #
 # AIR Equation Scoring Engine documentation build configuration file, created by
 # sphinx-quickstart on Thu Jun 13 10:11:59 2013.
@@ -51,8 +51,8 @@ project = u'AIR Equation Scoring Engine'
 copyright = jinja2.Markup( u'''Copyright 2013 American Institutes for Research<br/>
 Distributed under the AIR Open Source License, Version 1.0<br/>
 See accompanying file AIR-License-1_0.txt or at<br/>
-<a href="https://bitbucket.org/sbacoss/equationscorer/wiki/AIR%20Open%20Source%20License%201.0">
-https://bitbucket.org/sbacoss/equationscorer/wiki/AIR Open Source License 1.0</a><p/>''' )
+<a href="https://bitbucket.org/sbacoss/equationscorer/wiki/AIR_Open_Source_License_1.0">
+https://bitbucket.org/sbacoss/equationscorer/wiki/AIR_Open_Source_License_1.0</a><p/>''' )
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
