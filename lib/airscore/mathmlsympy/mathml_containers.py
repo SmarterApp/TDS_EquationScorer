@@ -42,7 +42,7 @@ class BaseMathmlContainer( BaseMathmlElement ):
         If the expression contains no equality or inequality operators, then a list containing a
         single string representing that expression will be returned.
         
-        :returns: :class:`list` of :class:`str`
+        :returns: :func:`list` of :func:`str`
         """
         
         # Split the expression on equality or inequality symbols

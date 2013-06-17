@@ -55,8 +55,9 @@ drop it into the Apache modules directory (this is :file:`C:\\Program Files\\Apa
 on my machine)
 
 Finally, in order to test the setup, you will need some way of sending a **POST**
-request to the Apache server.  I use the excellent :program:`Fiddler` utility
-(http://fiddler2.com/get-fiddler), but you can use the utility of your choice.
+request to the Apache server.  These instructions assume that you are using the
+:program:`Fiddler` utility (http://fiddler2.com/get-fiddler). If you prefer a different
+utility, then modify them accordingly.
 
 Download the Software
 +++++++++++++++++++++
@@ -89,17 +90,19 @@ enable that, add the following lines at the end of :file:`httpd.conf`\ ::
 
     # Configuration for equation scorer app
     WSGIPythonHome C:/Python27
-    WSGIPythonPath {EquationScorerBase}/eqscorer_rest;{EquationScorerBase}/lib
-    WSGIScriptAlias /eq-scorer-rest {EquationScorerBase}/eqscorer_rest/eqscorer_rest/wsgi.py
+    WSGIPythonPath {Equation-Scorer-Root}/eqscorer_rest;{Equation-Scorer-Root}/lib
+    WSGIScriptAlias /eq-scorer-rest {Equation-Scorer-Root}/eqscorer_rest/eqscorer_rest/wsgi.py
 
-Where you replace `{EquationScorerBase}`, everywhere it appears, with the actual
-directory to which you unzipped the AIR Equation Scoring Engine.
+Where you replace `{Equation-Scorer-Root}`, everywhere it appears, with the actual
+directory to which you unzipped the AIR Equation Scoring Engine. If your Python is
+not installed in the standard location, you will have to change :samp:`WSGIPythonHome`
+as well.
 
 Although Apache now knows how to run the engine, it will refuse to do so unless
 you tell it that it is allowed to.  To do that, add the following
 lines to the end of :file:`httpd.conf`\ ::
 
-    <Directory "{EquationScorerBase}/eqscorer_rest/eqscorer_rest">
+    <Directory "{Equation-Scorer-Root}/eqscorer_rest/eqscorer_rest">
         <Files "wsgi.py">
           Order allow,deny
           Allow from all
@@ -107,13 +110,12 @@ lines to the end of :file:`httpd.conf`\ ::
         </Files>
     </Directory>
 
-Again, replacing `{EquationScorerBase}` with the correct value.
+Again, replacing `{Equation-Scorer-Root}` with the correct value.
 
 Now, from the Windows :guilabel:`Services` control panel, restart the Apache service. If Apache
 fails to start, then chances are you mistyped something in the :file:`httpd.conf`
 
-To test the service, fire up Fiddler (or another tool capable of sending a **POST**
-request to your machine), and find the :guilabel:`Composer` window. Select **POST**
+To test the service, fire up Fiddler, and find the :guilabel:`Composer` window. Select **POST**
 for the request method. For the address, use ``http://127.0.0.1/eq-scorer-rest/isequivalent``,
 for the request headers, you should specify::
 

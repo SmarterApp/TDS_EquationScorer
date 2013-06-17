@@ -41,7 +41,7 @@ def mathml_element( *args ):
         class bob( BaseMathmlElement ):
             ...
      
-    in which case the new class will be used for elements named <bob> in the MathML
+    in which case the new class will be used for elements named :samp:`<bob>` in the MathML
     namespace.  This usage is not ideal, as it requires your Python class to have the
     same name (including case) as the MathML element.
     
@@ -116,19 +116,21 @@ class MathmlBuilder( et.TreeBuilder ):
 def process_mathml_data( mathml_string, encoding=None ):
     """Convert MathML into a form that can be understood by Sympy
     
-    The provided string must either contain a <mathml:math> element as the root, or
-    it must contain a <response> element (no namespace), which contains zero or
-    more <mathml:math> elements as children.
+    The provided string must either contain a :samp:`<mathml:math>` element as the root, or
+    it must contain a :samp:`<response>` element (no namespace), which contains zero or
+    more :samp:`<mathml:math>` elements as children.
     
-    :param mathml_string: A string containing a <mathml:math> or <response> element
+    :param mathml_string: A string containing a :samp:`<mathml:math>` or :samp:`<response>` element
     
-    :type mathml_string: str or unicode. If the provided object is unicode, it will be converted to a string by the specified encoding.
+    :type mathml_string: :func:`str` or :func:`unicode`. If the provided object is :func:`unicode`,
+        it will be converted to a string by the specified encoding.
     
     :param encoding: Name of the encoding that will be used in parsing the mathml_string. Defaults to UTF-8
     
     :type encoding: str
     
-    :returns: A :class:`MathExpressionList` object equivalent to the MathML original. This object's :meth:`__unicode__` method returns a string that can be passed to Sympy
+    :returns: A :class:`MathExpressionList` object equivalent to the MathML original. This object's
+        :meth:`__unicode__` method returns a string that can be passed to Sympy
         
     """
     if isinstance( mathml_string, unicode ):
@@ -142,7 +144,7 @@ def process_mathml_data( mathml_string, encoding=None ):
     elif root_node.tag == Q_RESPONSE:
         math_nodes = root_node.findall( u'./*' )
     else:
-        raise ValueError( 'XML root_node must have either a <mathml:math> element or a <response> element as its root ' )
+        raise ValueError( 'XML root_node must have either a :samp:`<mathml:math>` element or a :samp:`<response>` element as its root ' )
     
     expressions = MathExpressionList()
     for math_node in math_nodes:

@@ -24,34 +24,37 @@ class PartialSympyObject( object ):
     
     .. attribute:: next
     
-        (:class:`PartialSympyObject`) - The next rightward neighbor in the list.
+        :class:`PartialSympyObject` - The next rightward neighbor in the list.
         
     .. attribute:: is_closed
     
-        (:class:`bool`) - Used in balancing absolute value bars.  :const:`True`
+        :func:`bool` - Used in balancing absolute value bars.  :const:`True`
         if the parser has encountered an odd number of absolute value bars to
         the right of this point.
         
     .. attribute:: is_implicit_mutliplicand
     
-        (:class:`bool`) - The `is_implicit_multiplicand` attribute of the
-        :class:`BaseMathmlElement` that generated this object.
+        :func:`bool` - The `is_implicit_multiplicand` attribute of the
+        :class:`airscore.mathmlsympy.base_mathml_element.BaseMathmlElement`
+        that generated this object.
         
     .. attribute:: is_implicit_addend
     
-        (:class:`bool`) - The `is_implicit_addend` attribute of the
-        :class:`BaseMathmlElement` that generated this object.
+        :func:`bool` - The `is_implicit_addend` attribute of the
+        :class:`airscore.mathmlsympy.base_mathml_element.BaseMathmlElement`
+        that generated this object.
         
     .. attribute:: is_number
     
-        (:class:`bool`) - The `is_number` attribute of the
-        :class:`BaseMathmlElement` that generated this object.
+        :func:`bool` - The `is_number` attribute of the
+        :class:`airscore.mathmlsympy.base_mathml_element.BaseMathmlElement`
+        that generated this object.
         
     .. attribute:: text
     
-        (:class:`unicode`) - The result of the :meth:`BaseMathmlElement.get_sympy_text`
-        method of the :class:`BaseMathmlElement` object that generated this
-        object.
+        :func:`unicode` - The result of the :meth:`BaseMathmlElement.get_sympy_text`
+        method of the :class:`airscore.mathmlsympy.base_mathml_element.BaseMathmlElement`
+        object that generated this object.
     '''
     def __init__( self, el, tail ):
         self.next = tail

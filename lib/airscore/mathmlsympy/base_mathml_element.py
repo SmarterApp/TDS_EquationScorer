@@ -18,39 +18,48 @@ class BaseMathmlElement( et.Element ):
     
     .. attribute:: is_implicit_addend
     
-       :class:`boolean` This node may appear as the implicit addend of an integer (as the fractional part of a mixed number).
+       :func:`bool` - This node may appear as the implicit addend of an
+       integer (as the fractional part of a mixed number).
        
     .. attribute:: is_implicit_multiplicand
     
-       :class:`boolean` When a number or a symbol appears to the left of this node, an implicit multiplication should be performed.
+       :func:`bool` - When a number or a symbol appears to the left of this
+       node, an implicit multiplication should be performed.
        
     .. attribute:: is_inequality
     
-       :class:`boolean` This is an equal sign or inequality operator.  Identifies nodes where chained equations will be broken.
+       :func:`bool` - This is an equal sign or inequality operator. A chained
+       equation can be broken on this node.
        
     .. attribute:: is_number
     
-       :class:`boolean` This node contains a number (digits, decimal points, etc).
+       :func:`bool` - This node contains a number (digits, decimal
+       points, etc).
        
     .. attribute:: is_non_neg_integer
     
-       :class:`boolean` This node is a non-negative integer. This flag is used to detect when the numerator and denominator of a fraction contain simple numbers, allowing us to use the fraction as part of a mixed number.
+       :func:`bool` - This node is a non-negative integer. This flag is used
+       to detect when the numerator and denominator of a fraction contain simple
+       numbers, allowing us to use the fraction as part of a mixed number (see
+       :attr:`is_implicit_addend`).
        
     .. attribute:: validate_max_children
     
-       :class:`int` Maximum number of children permitted for this node.
+       :func:`int` - Maximum number of children permitted for this node.
 
     .. attribute:: validate_min_children
     
-       :class:`int` Minimum number of children permitted for this node.
+       :func:`int` - Minimum number of children permitted for this node.
        
     .. attribute:: validate_no_text
     
-       :class:`boolean` If :const:`True`, it is an error for this node to contain text directly.  Text may still exist inside of nested nodes.
+       :func:`bool` - If :const:`True`, it is an error for this node to
+       contain text directly.  Text may still exist inside of nested nodes.
        
     .. attribute:: validate_required_attributes
     
-      :class:`set` of :class:`str`. A set containing the names of required attributes. Not namespace aware.
+      :class:`set` of :func:`str` - A set containing the names of required
+      attributes. Not namespace aware.
     """
 
     is_implicit_addend = False
@@ -80,9 +89,9 @@ class BaseMathmlElement( et.Element ):
         :param tail: The head of a linked list of sympy objects which will become
             the tail of the newly created object
 
-        :type tail: :class:`PartialSympyObject`
+        :type tail: :class:`airscore.mathmlsympy.partial_sympy_object.PartialSympyObject`
         
-        :returns: :class:`PartialSympyObject`
+        :returns: :class:`airscore.mathmlsympy.partial_sympy_object.PartialSympyObject`
         """
         if tail.is_implicit_multiplicand:
             tail = mathml_operators.TIMES_OPERATOR.to_sympy( tail )
@@ -104,17 +113,20 @@ class BaseMathmlElement( et.Element ):
         return DICTIONARY.get( u, u )
     
     def get_sympy_text(self):
-        """Returns a string representing this node, including all of its children, in the parsed Sympy output
+        """Get a string representing this node, including children
         
         This is the main method that you will need to override in order
-        to control how this node and its children are rendered in the sympy output.
+        to control how this node and its children are rendered in the sympy
+        output.
         
-        The default implementation simply returns the :attr:`decode_text` attribute.
+        The default implementation simply returns the :attr:`decode_text`
+        attribute.
         
-        Override :meth:`to_sympy` instead if you need to control how this node relates
-        to its neighbors.  
+        Override :meth:`to_sympy` instead if you need to control how this node
+        relates to its neighbors.  
         
-        :returns: :class:`unicode` - The string representing this node in a sympy expression
+        :returns: :class:`unicode` - The string representing this node in a
+            sympy expression
         """
         return self.decoded_text
     
@@ -123,10 +135,9 @@ class BaseMathmlElement( et.Element ):
         
         The :mod:`xml.etree.ElementTree` parsing mechanism forces us to choose
         the class for new elements when the start tag has been parsed, but before
-        any of the content has been read.  There are numerous MathML constructs
-        for which we want to have different classes, but they are represented
-        by the same start tag, and we don't know until the content is read
-        which class we should use.  Our parser calls this method after the end
+        any of the content has been read.  There are a few MathML constructs
+        for which we need different classes, but they are represented
+        by the same start tag.  Our parser calls this method after the end
         tag has been processed, in order to give the element a chance to make
         any changes it needs to make to finalize its class selection.
         
@@ -136,8 +147,8 @@ class BaseMathmlElement( et.Element ):
         instance of a subclass of its original class.
         
         We are using an admittedly obscure Python "feature," and I can't recommend
-        that you adopt the practice of altering the classes of existing objects as
-        a habit. But for this limited purpose it seemed the cleanest solution.
+        that you make a habit of altering the classes of existing objects. But for
+        this limited purpose it seemed the cleanest solution.
         
         :returns: :const:`None`
         """

@@ -33,23 +33,23 @@ def isEquivalent(response, rubric, allowChangeOfVariable = False, allowSimplify 
     
     :param allowChangeOfVariables:
     
-    :type allowChangeOfVariables: boolean
+    :type allowChangeOfVariables: bool
 
     :param allowSimplify:
     
-    :type allowSimplify: boolean
+    :type allowSimplify: bool
 
     :param trigIdentities:
     
-    :type trigIdentities: boolean
+    :type trigIdentities: bool
 
     :param logIdentities:
     
-    :type logIdentities: boolean
+    :type logIdentities: bool
 
     :param forceAssumptions:
     
-    :type forceAssumptions: boolean
+    :type forceAssumptions: bool
 
     """
     response_expr = sympify(response, {'evaluate':'evaluate'})

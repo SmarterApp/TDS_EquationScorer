@@ -17,8 +17,8 @@ Contents:
    :maxdepth: 2
    
    quickstart
-   python_api
    rest_api
+   python_api
    extending
 
 

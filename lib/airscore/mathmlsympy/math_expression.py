@@ -12,18 +12,20 @@ class MathExpression( object ):
     
     .. attribute:: math_node
     
-        :class:`MathmlMath` The XML Element tree that was returned by the
-        parser. Elements within the tree will be represented by subclasses
-        of :class:`BaseMathmlElement`, which in turn subclasses
-        :class:`xml.etree.ElementTree.Element`
+        :class:`airscore.mathmlsympy.mathml_containser.MathmlMath` -
+        The XML element tree (see :mod:`.xml.etree.ElementTree`) that was
+        returned by the parser. Elements within the tree will be represented
+        by subclasses of
+        :class:`airscore.mathmlsympy.base_mathml_element.BaseMathmlElement`,
+        which in turn subclasses :class:`xml.etree.ElementTree.Element`
         
     .. attribute:: sympy_response
     
-        [ str ] A list of strings representing equations, inequalities or
+        :class:`list` of :class:`str` - A list of strings representing equations, inequalities or
         expressions.  This is the result of parsing the XML represented
         by :attr:`math_node`\ .  The list will consist of more than one
         element if the :attr:`math_node` contains more than one equality or inequality
-        operator.  Specifically, if the MathML represented something like::
+        operator.  Specifically, if the MathML represents something like::
         
             A = B = C < D
         

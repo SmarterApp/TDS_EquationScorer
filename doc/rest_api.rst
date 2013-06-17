@@ -10,7 +10,7 @@ AIR Equation Scoring Engine RESTful Web Interface
 .. contents:: Contents
    :local:
 
-The REST interface has a single access point.  A ``POST`` to :file:``/isequivalent/``
+The REST interface has a single access point.  A ``POST`` to :file:`http://{my_site}/isequivalent/`
 with a JSON payload, returns a JSON object containing the results of the call.
 
 **POST /isequivalent/**
@@ -20,15 +20,19 @@ Test whether an answer is mathematically equivalent to the rubric
 Parameters
 ++++++++++
 
+.. _answer:
+
 **answer** (String, required)
   The test answer
 
-  A JSON string containing a MathML expression. Per the JSON specification, all quotation marks within the
-  MathML must be preceded by backslashes.
+  A JSON string containing a MathML expression.
   
-  Any "special" characters in the answer may be included in one of three ways:
+  Per the JSON `specification <http://www.json.org/>`_\ ,
+  all quotation marks within the MathML must be preceded by backslashes.
+  Any other "special" characters in the answer may be included in one of three ways:
   
-    - They may simply be embedded as unicode in the charset of the request ( e.g., |le| )
+    - They may simply be embedded as unicode encoded using the charset of the
+      request ( e.g., |le| )
     
     - They may be escaped as XML escape sequences ( e.g., ``&#x2264;``)
     
@@ -37,8 +41,7 @@ Parameters
 **rubric** (String, required)
   The rubric against which the answer will be compared.
 
-  A JSON string containing a MathML expression. Per the JSON specification, all quotation marks within the
-  MathML must be preceded by backslashes.
+  A JSON string containing a MathML expression (see :ref:`answer <answer>`).
   
 **parameters** (Dictionary, optional)
   A dictionary of parameters that modify how sympy tests for equivalency. If omitted, all of the parameters

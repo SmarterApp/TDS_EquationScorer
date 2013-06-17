@@ -8,10 +8,10 @@ AIR Equation Scoring Engine Python API
 .. contents:: Contents
    :local:
 
+.. module:: airscore
+
 Module :mod:`airscore`
 ++++++++++++++++++++++
-
-.. module:: airscore
 
 The :mod:`airscore` module is the primary Python entry point for the :program:`AIR
 Equation Scoring Engine`\ .  It provides two functions. The function
