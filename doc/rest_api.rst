@@ -41,11 +41,16 @@ Parameters
 **rubric** (String, required)
   The rubric against which the answer will be compared.
 
-  A JSON string containing a MathML expression (see :ref:`answer <answer>`).
+  A JSON string. Depending on the **sympy_rubric** parameter, this will be a MathML
+  expression (see :ref:`answer <answer>`) or an expression parsable by Sympy.
   
 **parameters** (Dictionary, optional)
   A dictionary of parameters that modify how sympy tests for equivalency. If omitted, all of the parameters
   take on their default values.  The keys permitted in **parameters** are the following:
+
+  **sympy_rubric** (``true`` or ``false``, optional)
+    Default ``false``. If ``true``, the **rubric** argument will be treated as a
+    Sympy string.  If ``false``, the **rubric** will be treated as MathML.
 
   **allow_change_of_variable** (``true`` or ``false``, optional)
     Default ``false``

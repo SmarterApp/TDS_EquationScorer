@@ -14,13 +14,14 @@ class IsEquivalentRequest( object ):
         self.parameters = self.Parameters( **parameters )
         
     class Parameters( object ):
-        def __init__( self, allow_change_of_variable = False, allow_simplify = True, trig_identities = False,
-                  log_identities = False, force_assumptions = False, **kwargs ):
+        def __init__( self, allow_change_of_variable=False, allow_simplify=True, trig_identities=False,
+                  log_identities=False, force_assumptions=False, sympy_rubric=False, **kwargs ):
             self.allow_change_of_variable = allow_change_of_variable
             self.allow_simplify = allow_simplify
             self.trig_identities = trig_identities
             self.log_identities = log_identities
             self.force_assumptions = force_assumptions
+            self.sympy_rubric = sympy_rubric
         
 class IsEquivalentResponse( object ):
     def __init__( self, correct=False, reason=None ):

@@ -35,18 +35,22 @@ class IsEquivalent( APIView ):
         errors = serializer.errors
         if not errors:
             valid_request = serializer.object
+            p = valid_request.parameters
         else:
             response.reason = "Invalid request object"
             raise ErrorGuard( response, None, "Invalid request object", 400 )
         
-        with ErrorGuard( response, Exception, "Unable to parse rubric as mathml", 400 ):
-            rubric = unicode( process_mathml_data( valid_request.rubric ) )
+        if p.sympy_rubric:
+            rubric = valid_request.rubric
+        else: 
+            with ErrorGuard( response, Exception, "Unable to parse rubric as mathml", 400 ):
+                rubric = unicode( process_mathml_data( valid_request.rubric ) )
+            
             
         with ErrorGuard( response, Exception, "Unable to parse answer as mathml", 200 ):
             answer = unicode( process_mathml_data( valid_request.answer ) )
 
         with ErrorGuard( response, Exception, "Unable to compare answer with rubric", 200 ):
-            p = valid_request.parameters
             correct = isEquivalent( answer, rubric,
                     allowChangeOfVariable = p.allow_change_of_variable,
                     allowSimplify = p.allow_simplify,

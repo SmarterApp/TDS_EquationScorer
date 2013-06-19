@@ -125,8 +125,8 @@ for the request headers, you should specify::
 And for the request body, you should use::
 
     {
-      "answer":"<math xmlns=\\"http://www.w3.org/1998/Math/MathML\\"><mn>1</mn><mi>x</mi><mo>≤</mo><mn>3</mn></math>",
-      "rubric":"<math xmlns=\\"http://www.w3.org/1998/Math/MathML\\"><mn>1</mn><mi>x</mi><mo>≤</mo><mn>3</mn></math>",
+      "answer":"<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mn>1</mn><mi>x</mi><mo>≤</mo><mn>3</mn></math>",
+      "rubric":"<math xmlns=\"http://www.w3.org/1998/Math/MathML\"><mn>1</mn><mi>x</mi><mo>≤</mo><mn>3</mn></math>",
       "parameters":{}
     }
 
