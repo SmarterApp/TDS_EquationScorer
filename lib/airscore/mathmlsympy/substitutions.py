@@ -57,4 +57,5 @@ DICTIONARY = {
     u"arccos" : u"acos",
     u"arctan" : u"atan",
     u"i" : u"I",
+    u"\\Box" : u"box",
 }
