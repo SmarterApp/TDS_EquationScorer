@@ -10,6 +10,8 @@
 from sympy import expand, nsimplify, simplify, sympify, solve, Equality, Symbol
 from sympy.core.sympify import SympifyError
 
+__max_expr_len__ = 500
+
 def isEquivalent(response, rubric, allowChangeOfVariable = False, allowSimplify = True, trigIdentities = False,
                  logIdentities = False, forceAssumptions = False):
     """True if Sympy is able to determine that the two expressions are equivalent.
@@ -155,6 +157,8 @@ def findFactor(exp1, exp2):
 
 def parsable(response):
     try:
+        if (len(response) > __max_expr_len__):
+            raise ValueError("Expression is too long")
         sympify(response, {'evaluate':'evaluate'})
     except SympifyError:
         return 1 
