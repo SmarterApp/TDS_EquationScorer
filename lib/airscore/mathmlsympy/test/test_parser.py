@@ -161,6 +161,19 @@ class TestParser( abstract_parser_test.TestCase ):
         archetype = "3*cos(y)"
         self.assertEquals( txt, archetype, 'Found {!r}, expected {!r}'.format( txt, archetype ) )
         
+    def test_identifier_4(self):
+        '''MText is treated as an identifier
+        '''
+        node = et.fromstring( '<mtext xmlns="http://www.w3.org/1998/Math/MathML">bob</mtext>', self.parser )
+        self.assertIsInstance( node, MathmlMI, "Didn't get correct type for <mtext> element: " )
+        self.assertEquals( node.get_sympy_text(), 'bob', "Got the wrong content in the XML node" )
+        self.assertFalse( node.is_number, "Identifier says it is a number" )
+        self.assertTrue( node.is_implicit_multiplicand, "Identifier says it cannot be implicitly mutliplied" )
+        self.assertFalse( node.is_implicit_addend, "Identifier says it can be implicitly added" )
+        self.assertFalse( node.is_inequality, "Identifier says it is an equality or inequality operator" )
+        sympy = node.to_sympy()
+        self.assertEquals( sympy.get_sympy_text(), 'bob', "Got the wrong content from the sympy linked list" )
+        
     def test_number_identifier_1(self):
         '''Test implicit multiplication of an identifier by a number
         '''

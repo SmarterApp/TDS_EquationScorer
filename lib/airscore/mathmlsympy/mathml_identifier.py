@@ -13,7 +13,7 @@ from partial_sympy_object import PartialSympyObject, SYMPY_NONE
 
 FUNCTION_NAMES = set( ( u"sin", u"cos", u"tan", u"asin", u"acos", u"atan", u"log", u"ln", u"exp", u"f", u"g" ) )
 
-@mathml_element( 'mi' )
+@mathml_element( 'mi', 'mtext' )
 class MathmlMI( BaseMathmlElement ):
     def pick_subclass( self ):
         if self.decoded_text in FUNCTION_NAMES:
