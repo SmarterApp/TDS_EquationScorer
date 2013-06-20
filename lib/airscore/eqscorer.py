@@ -7,13 +7,20 @@
 # https://bitbucket.org/sbacoss/equationscorer/wiki/AIR_Open_Source_License_1.0
 #################################################################################
 
-from sympy import expand, nsimplify, simplify, sympify, solve, Equality, Symbol
+from sympy import expand, nsimplify, simplify, sympify, solve, Equality, Symbol, symbols, gcd, Float, Wild
 from sympy.core.sympify import SympifyError
+from sympy.parsing.sympy_parser import parse_expr
 
 __max_expr_len__ = 500
 
-def isEquivalent(response, rubric, allowChangeOfVariable = False, allowSimplify = True, trigIdentities = False,
-                 logIdentities = False, forceAssumptions = False):
+a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z = symbols('a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z')
+_a1, _a2, _a3, _a4, _a5, _a6, _a7, _a8, _a9, _a10, _a11, _a12, _a13, _a14, _a15, _a16, _a17, _a18, _a19, _a20, _a21, _a22, _a23, _a24, _a25, _a26, _a27, _a28, _a29, _a30, _a31, _a32, _a33, _a34, _a35, _a36, _a37, _a38, _a39, _a40 = symbols('_a1, _a2, _a3, _a4, _a5, _a6, _a7, _a8, _a9, _a10, _a11, _a12, _a13, _a14, _a15, _a16, _a17, _a18, _a19, _a20, _a21, _a22, _a23, _a24, _a25, _a26, _a27, _a28, _a29, _a30, _a31, _a32, _a33, _a34, _a35, _a36, _a37, _a38, _a39, _a40')
+_m1, _m2, _m3, _m4, _m5, _m6, _m7, _m8, _m9, _m10, _m11, _m12, _m13, _m14, _m15, _m16, _m17, _m18, _m19, _m20, _m21, _m22, _m23, _m24, _m25, _m26, _m27, _m28, _m29, _m30, _m31, _m32, _m33, _m34, _m35, _m36, _m37, _m38, _m39, _m40 = symbols('_m1, _m2, _m3, _m4, _m5, _m6, _m7, _m8, _m9, _m10, _m11, _m12, _m13, _m14, _m15, _m16, _m17, _m18, _m19, _m20, _m21, _m22, _m23, _m24, _m25, _m26, _m27, _m28, _m29, _m30, _m31, _m32, _m33, _m34, _m35, _m36, _m37, _m38, _m39, _m40')
+
+evaluateOptions = {'evaluate':'evaluate','C':c,'N':n,'Q':q,'S':s}
+
+def isEquivalent(response, rubric, allowChangeOfVariable = False, allowSimplify = True,
+                 trigIdentities = False, logIdentities = False, forceAssumptions = False):
     """True if Sympy is able to determine that the two expressions are equivalent.
     
     This function requires two parameters: a test answer and a rubric. Each of these
@@ -54,8 +61,8 @@ def isEquivalent(response, rubric, allowChangeOfVariable = False, allowSimplify 
     :type forceAssumptions: bool
 
     """
-    response_expr = sympify(response, {'evaluate':'evaluate'})
-    rubric_expr = sympify(rubric, {'evaluate':'evaluate'})
+    response_expr = sympify(response, evaluateOptions)
+    rubric_expr = sympify(rubric, evaluateOptions)
     
     #sympy forces simplification of arithmetic (in)equailities into True or False
     if isinstance(response_expr, bool) or isinstance(rubric_expr, bool):
@@ -80,12 +87,15 @@ def isEquivalent(response, rubric, allowChangeOfVariable = False, allowSimplify 
         else:
             return False
         
-    elif (isinstance(response_expr, Equality) and isinstance(rubric_expr, Equality)):
-        if allowSimplify:
-            return (findFactor(response_expr.rhs - response_expr.lhs, rubric_expr.rhs - rubric_expr.lhs) != None)
-        else:
-            return (isEquivalentExpressions(response_expr.rhs, rubric_expr.rhs, allowChangeOfVariable, allowSimplify, trigIdentities, logIdentities, forceAssumptions) and  isEquivalentExpressions(response_expr.lhs, rubric_expr.lhs, allowChangeOfVariable, allowSimplify, trigIdentities, logIdentities, forceAssumptions) or \
+    elif (isinstance(response_expr, Equality) or isinstance(rubric_expr, Equality)):
+        if (isinstance(rubric_expr, Equality) and isinstance(response_expr, Equality)):
+            if allowSimplify:
+                return (findFactor(response_expr.rhs - response_expr.lhs, rubric_expr.rhs - rubric_expr.lhs) != None)
+            else:
+                return (isEquivalentExpressions(response_expr.rhs, rubric_expr.rhs, allowChangeOfVariable, allowSimplify, trigIdentities, logIdentities, forceAssumptions) and  isEquivalentExpressions(response_expr.lhs, rubric_expr.lhs, allowChangeOfVariable, allowSimplify, trigIdentities, logIdentities, forceAssumptions) or \
                        isEquivalentExpressions(response_expr.lhs, rubric_expr.rhs, allowChangeOfVariable, allowSimplify, trigIdentities, logIdentities, forceAssumptions) and  isEquivalentExpressions(response_expr.rhs, rubric_expr.lhs, allowChangeOfVariable, allowSimplify, trigIdentities, logIdentities, forceAssumptions))
+        else:
+            return False            
     elif (isinstance(rubric_expr, list) or isinstance(response_expr, list)):
         if (isinstance(rubric_expr, list) and isinstance(response_expr, list)):
             return (response_expr == rubric_expr)
@@ -140,29 +150,38 @@ def isInequality(exprstr):
     if (eqtype == 'Gt('):
         return 3, exprstr[indlhs+1:-1], exprstr[3:indlhs]
 
-# Check if exp1 = f*exp2 for arbitrary f
+
+# Check if exp1 = f*exp2 for f=1 or -1
 def findFactor(exp1, exp2):
     ret = None
-    for it in xrange(27):
-        smbl = Symbol(chr(ord('a')+it))
-        if smbl not in exp1.atoms(Symbol) and smbl not in exp2.atoms(Symbol):
-            break
+    if (isEquivalentExpressions(exp1, exp2)):
+        ret = 1
+    elif (isEquivalentExpressions(exp1, -1*exp2)):
+        ret = -1
+    else:
+        try:
+            for it in xrange(27):
+                smbl = Symbol(chr(ord('a')+it))
+                if smbl not in exp1.atoms(Symbol) and smbl not in exp2.atoms(Symbol):
+                    break
 
-    if smbl not in exp1.atoms(Symbol) and smbl not in exp2.atoms(Symbol):
-        sol = solve(exp1 - smbl*exp2, smbl)
-        if sol and len(sol[0].atoms(Symbol)) == 0:
-            ret = sol[0]
+            if smbl not in exp1.atoms(Symbol) and smbl not in exp2.atoms(Symbol):
+                sol = solve(exp1 - smbl*exp2, smbl)
+                if sol and len(sol[0].atoms(Symbol)) == 0:
+                    ret = sol[0]
+        except:
+            #solver was not successful
+            pass
 
     return ret
+
 
 def parsable(response):
     try:
         if (len(response) > __max_expr_len__):
             raise ValueError("Expression is too long")
-        sympify(response, {'evaluate':'evaluate'})
-    except SympifyError:
-        return 1 
-    except TypeError:
+        sympify(response, evaluateOptions)
+    except (SympifyError, TypeError, AttributeError, ZeroDivisionError, ValueError):
         return 1
     else:
         return 0 
