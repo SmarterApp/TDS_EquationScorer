@@ -20,6 +20,8 @@ Contents:
    rest_api
    python_api
    extending
+   readme_link
+   release_notes_link
 
 
 
