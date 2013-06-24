@@ -372,5 +372,10 @@ class TestParser( abstract_parser_test.TestCase ):
         self.assertEquals( fully_processed, archetype, u"Saw {}, expected {}".format( fully_processed, archetype ) )
         
         
-        
+    def test_complex_expression(self):
+        xml = self.mathml_wrap( u"<mfenced><mn>4.15</mn><msup><mrow><mn>10</mn></mrow><mrow><mn>2</mn><msup><mrow><mn>20</mn></mrow><mrow><mn>2</mn><mo>+</mo><mn>500</mn></mrow></msup></mrow></msup></mfenced>")
+        node = et.fromstring( xml, self.parser )
+        archetype = u"(4.15*((10))**((2*((20))**((2+500)))))"
+        txt = node.get_sympy_text()
+        self.assertEquals( txt, archetype, u"Saw {}, expected {}".format( txt, archetype ) )
 

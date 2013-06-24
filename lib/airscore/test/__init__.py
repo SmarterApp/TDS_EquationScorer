@@ -7,3 +7,13 @@
 # https://bitbucket.org/sbacoss/equationscorer/wiki/AIR_Open_Source_License_1.0
 #################################################################################
 
+import logging.config
+import sys
+logging.getLogger().setLevel('INFO')
+logging.getLogger('airscore.timeout').setLevel('DEBUG')
+
+handler = logging.StreamHandler(sys.stderr)
+# logging.getLogger().addHandler( handler )
+# logging.getLogger('airscore.timeout').addHandler( handler )
+
+import airscore.timeout

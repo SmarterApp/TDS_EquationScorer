@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import APIException
 
-from airscore import isEquivalent, process_mathml_data
+from airscore import isEquivalent, process_mathml_data, Timeout, TimeoutError
 from serializers import RequestSerializer, ResponseSerializer
 from messages import IsEquivalentRequest, IsEquivalentResponse
 
@@ -51,12 +51,13 @@ class IsEquivalent( APIView ):
             answer = unicode( process_mathml_data( valid_request.answer ) )
 
         with ErrorGuard( response, Exception, "Unable to compare answer with rubric", 200 ):
-            correct = isEquivalent( answer, rubric,
-                    allowChangeOfVariable = p.allow_change_of_variable,
-                    allowSimplify = p.allow_simplify,
-                    trigIdentities = p.trig_identities,
-                    logIdentities = p.log_identities,
-                    forceAssumptions = p.force_assumptions )
+            with Timeout(30):
+                correct = isEquivalent( answer, rubric,
+                        allowChangeOfVariable = p.allow_change_of_variable,
+                        allowSimplify = p.allow_simplify,
+                        trigIdentities = p.trig_identities,
+                        logIdentities = p.log_identities,
+                        forceAssumptions = p.force_assumptions )
 
         response.correct = correct
         if not correct:

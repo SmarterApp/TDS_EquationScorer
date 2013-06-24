@@ -13,7 +13,7 @@ from airscore.eqscorer import isEquivalent, parsable
 from testlib import hasEquivalentSolutions, isReducedFraction, matchExpression
 from sympy import sympify
 
-class EqScorerTest( unittest.TestCase ):
+class TestEqScorer( unittest.TestCase ):
 #tests to remain valid after implementation change
 
     def setUp(self):

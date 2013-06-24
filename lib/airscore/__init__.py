@@ -9,3 +9,4 @@
 
 from eqscorer import isEquivalent
 from mathmlsympy.parser import process_mathml_data
+from timeout import Timeout, TimeoutError
