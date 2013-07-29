@@ -18,11 +18,24 @@ You will probably want to set up something more robust for a production system.
 Get the Dependencies
 ++++++++++++++++++++
 
+Apache httpd
+------------
+
 You will need to install the :program:`Apache httpd` server. These instructions were
-written for version 2.4.4, but they should work with minimal changes for any
+written for version 2.4.4, but they should apply to any
 version of Apache 2.2 or 2.4. I used the Windows 64 binary build from
-`Apache Lounge <http://www.apachelounge.com/>`_
-(http://www.apachelounge.com/download/win64/binaries/httpd-2.4.4-win64.zip)
+`Apache Lounge <http://www.apachelounge.com/download>`_ Choose an appropriate download for your architecture (32-bit or 64-bit)
+
+After you have installed the Apache binary, you will want to set it up so that
+it runs as a Windows service. Open a command window in the Apache ``bin`` directory, and
+execute::
+
+    httpd.exe -k install 
+    
+More information on running Apache on Windows can be found at http://httpd.apache.org/docs/current/platform/windows.html.
+
+Python 2.7
+----------
 
 You will need to have the :program:`Python` programming language installed. The
 software was developed and tested
@@ -45,14 +58,20 @@ Then use pip to install the remaining Python dependencies::
     c:\Python27\Scripts\pip install django
     c:\Python27\Scripts\pip install djangorestframework
     
+mod_wsgi
+--------
+    
 An Apache plugin called :program:`mod_wsgi` provides the bridge
 between Apache and Python. It is easiest to acquire a pre-compiled binary
-for this package. One is available from http://www.lfd.uci.edu/~gohlke/pythonlibs/
+for this package. One is available from http://www.lfd.uci.edu/~gohlke/pythonlibs/#mod_wsgi
 Be sure to download the version that is appropriate for your Apache version,
 Python version and Windows architecture.  After downloading the zip archive,
 extract the single file that it contains (should be called :file:`mod_wsgi.so`) and
 drop it into the Apache modules directory (this is :file:`C:\\Program Files\\Apache24\\modules`
 on my machine)
+
+Fiddler
+-------
 
 Finally, in order to test the setup, you will need some way of sending a **POST**
 request to the Apache server.  These instructions assume that you are using the
