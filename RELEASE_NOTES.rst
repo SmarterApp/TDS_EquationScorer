@@ -6,6 +6,11 @@
 AIR Equation Scoring Engine Release Notes
 =========================================
 
+Version 0.9.2
++++++++++++++
+
+ + Documentation changes
+
 Version 0.9.1
 +++++++++++++
 
