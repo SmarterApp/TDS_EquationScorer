@@ -1,0 +1,3 @@
+include AIR-License-1_0.txt manage.py README RELEASE_NOTES.rst ]),
+recursive-include doc Makefile make.bat conf.py *.rst *.html
+prune doc/_build

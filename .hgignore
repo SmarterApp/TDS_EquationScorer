@@ -4,6 +4,8 @@ syntax: glob
 .pydevproject
 .settings
 CVS
+MANIFEST
+dist
 
 syntax: regexp
 doc/_build
