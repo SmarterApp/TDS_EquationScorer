@@ -6,6 +6,7 @@ syntax: glob
 CVS
 MANIFEST
 dist
+air_eqscorer.egg-info
 
 syntax: regexp
 doc/_build
